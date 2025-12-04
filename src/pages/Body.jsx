@@ -4,18 +4,11 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 const Body = () => {
- const { pathname } = useLocation();
-
- // Decide navbar type based on route
- const getNavbarType = () => {
-   if (pathname === "/") return "landing"; // Landing page
-   return "home"; // All other pages
- };
 
   return (
     <div>
   
-      <Navbar type={getNavbarType()} />
+      <Navbar type={"true"} />
       <Outlet />
       <Footer/>
     </div>

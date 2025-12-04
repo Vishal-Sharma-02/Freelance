@@ -3,7 +3,7 @@ import React from "react";
 const Courses = () => {
   const courses = [
     {
-      title: "Web Development",
+      title: " Video Editing",
       description:
         "Learn HTML, CSS, JavaScript, and modern frameworks to build powerful websites.",
       icon: "💻",

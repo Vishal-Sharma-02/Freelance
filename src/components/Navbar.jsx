@@ -5,7 +5,7 @@ const Navbar = ({ type }) => {
   return (
     <div className="w-full fixed top-0 left-0 z-50">
       {/* ⭐ LANDING NAVBAR */}
-      {type === "landing" && (
+      {type === "false" && (
         <div
           className="w-full py-4 px-6 flex justify-between items-center
                      bg-gradient-to-r from-yellow-600 via-orange-500 to-purple-700
@@ -28,7 +28,7 @@ const Navbar = ({ type }) => {
       )}
 
       {/* ⭐ HOME NAVBAR */}
-      {type === "home" && (
+      {type === "true" && (
         <div
           className="w-full py-4 px-10 flex justify-between items-center 
                      bg-gradient-to-r from-blue-900 via-blue-700 to-indigo-800

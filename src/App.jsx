@@ -19,8 +19,8 @@ export default function App() {
     <div>
       <BrowserRouter>
         <Routes>
+            <Route path='/anaylixpromo' element={<LandingPage/>} />
           <Route path='/' element={<Body />}>
-            <Route index element={<LandingPage/>} />
             <Route path='/home' element={<Home />} />
             <Route path='/contact' element={<ContactUs />} />
             <Route path='webinar' element={<Webinar />} />
