@@ -9,7 +9,11 @@ const Body = () => {
     <div>
   
       <Navbar type={"true"} />
+      <div className='pt-24'>
+
+
       <Outlet />
+      </div>
       <Footer/>
     </div>
   );

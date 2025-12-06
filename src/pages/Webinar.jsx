@@ -18,7 +18,7 @@ const Webinar = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 to-purple-50 pt-32 pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-purple-100 to-purple-50  py-10">
       {/* Page Header */}
       <div className="max-w-5xl mx-auto px-6">
         <h1 className="text-4xl font-bold text-gray-900">Get Webinar Link</h1>

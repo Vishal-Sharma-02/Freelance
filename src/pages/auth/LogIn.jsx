@@ -1,11 +1,17 @@
-import React, { useState } from "react";
+import React, { useState} from "react";
+import {useDispatch} from "react-redux"
+import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { addUser } from "../../utils/userSlice.jsx";
 
 const LogIn = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const dispatch = useDispatch();
+
+  const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const togglePassword = () => {
     setShowPass(!showPass);
@@ -14,34 +20,58 @@ const LogIn = () => {
   const handleClick = async (e) => {
     e.preventDefault();
 
-    const status = true; // demo
-    setEmail("");
-    setPassword("");
+    if (!emailId || !password) {
+      alert("Please enter both email and password");
+      return;
+    }
 
-    if (status) {
-      navigate("/");
+    try {
+      setLoading(true);
+
+      const res = await axios.post(
+        "http://localhost:3000/auth/login",
+        {
+          emailId,
+          password,
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+
+      console.log(res.data);
+      dispatch(addUser(res.data));
+
+      navigate("/profile"); // redirect to home
+
+    } catch (err) {
+      console.error(err);
+
+      alert(err.response?.data?.message || "Invalid Credentials");
+    } finally {
+      setLoading(false);
+      setEmailId("");
+      setPassword("");
     }
   };
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-r from-purple-100 to-purple-50 flex flex-col items-center pt-32">
-      {/* 👆 FIX: pt-32 pushes page under the navbar */}
-
-      {/* Top Heading */}
       <div className="w-full max-w-5xl px-6">
         <h1 className="text-4xl font-bold text-gray-800">Login</h1>
         <p className="text-gray-500 mt-2">Home &gt; Login</p>
       </div>
 
-      {/* Main Section */}
       <div className="w-full max-w-5xl mt-12 px-6">
         <h2 className="text-3xl font-semibold text-gray-900">
           Hey! Welcome Back
         </h2>
+
         <p className="text-gray-600 mt-2">Login to your Account to Continue</p>
 
-        {/* Form Box */}
         <form className="mt-8 max-w-md">
+
           {/* Email */}
           <label htmlFor="email" className="block font-medium text-gray-800">
             Email / Id.
@@ -50,8 +80,8 @@ const LogIn = () => {
             type="email"
             id="email"
             placeholder="Enter your Mail/Id"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={emailId}
+            onChange={(e) => setEmailId(e.target.value)}
             className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 mb-4 focus:outline-none focus:ring-2 focus:ring-purple-300"
           />
 
@@ -70,7 +100,6 @@ const LogIn = () => {
               className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-300"
             />
 
-            {/* Show / Hide Button */}
             <button
               type="button"
               onClick={togglePassword}
@@ -88,9 +117,10 @@ const LogIn = () => {
           {/* Sign In Button */}
           <button
             onClick={handleClick}
-            className="mt-6 w-40 bg-yellow-600 text-white px-5 py-2 rounded-full shadow-lg hover:bg-yellow-700 transition"
+            disabled={loading}
+            className="mt-6 w-40 bg-yellow-600 text-white px-5 py-2 rounded-full shadow-lg hover:bg-yellow-700 transition disabled:bg-gray-400"
           >
-            Sign In →
+            {loading ? "Signing In..." : "Sign In →"}
           </button>
 
           {/* Sign Up */}

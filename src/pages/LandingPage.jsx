@@ -58,7 +58,7 @@ const LandingPage = () => {
           transition group-hover:bg-[#2a210a]
         "
               >
-                Get Instant Access for ₹951
+                Get Instant Access for ₹3499
               </span>
             </Link>
 

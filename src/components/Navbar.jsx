@@ -1,71 +1,183 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link,useLocation } from "react-router-dom";
+import axios from "axios";
+import logo from "../assets/logo1.png";
 
 const Navbar = ({ type }) => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const location = useLocation();
+  // 🔥 CHECK USER LOGIN STATUS
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await axios.get("http://localhost:3000/profile/view", {
+          withCredentials: true,
+        });
+        if (res.data) setIsLoggedIn(true);
+      } catch (error) {
+        setIsLoggedIn(false);
+      }
+    };
+    checkAuth();
+  }, [location.pathname]);
+
   return (
     <div className="w-full fixed top-0 left-0 z-50">
+
       {/* ⭐ LANDING NAVBAR */}
       {type === "false" && (
-        <div
-          className="w-full py-4 px-6 flex justify-between items-center
-                     bg-gradient-to-r from-yellow-600 via-orange-500 to-purple-700
-                     shadow-lg"
-        >
-          {/* Logo */}
-          <Link to={"/"} className="text-3xl font-extrabold text-white tracking-wide drop-shadow-lg">
-            AnalyixHub
-          </Link>
+        <div className="backdrop-blur-xl bg-[#0D1125]/80 border-b border-white/10 shadow-lg">
+          <div className="max-w-7xl mx-auto px-14 py-2 flex justify-between items-center">
+            
+            <Link to="/" onClick={() => setMobileOpen(false)}>
+              <img src={logo} alt="logo" className="h-16 md:h-20 lg:h-20 w-auto drop-shadow-xl" />
+            </Link>
 
-          {/* Purchase Button */}
-          <Link
-            to="/home"
-            className="bg-white text-purple-700 font-bold px-6 py-3 rounded-md 
-                       shadow-md hover:bg-purple-200 transition"
-          >
-            PURCHASE NOW
-          </Link>
+            {/* Desktop: Show Purchase OR Profile */}
+            <div className="hidden md:block">
+              {!isLoggedIn ? (
+                <Link
+                  to="/login"
+                  className="bg-gradient-to-r from-purple-500 to-cyan-400
+                           text-white font-semibold px-7 py-3 rounded-full 
+                           shadow-lg hover:scale-105 transition"
+                >
+                  PURCHASE NOW
+                </Link>
+              ) : (
+                <Link
+                  to="/profile"
+                  className="text-white text-lg font-semibold hover:text-cyan-300 transition"
+                >
+                  My Profile
+                </Link>
+              )}
+            </div>
+
+            <button
+              className="md:hidden text-white text-3xl"
+              onClick={() => setMobileOpen(!mobileOpen)}
+            >
+              ☰
+            </button>
+          </div>
+
+          {/* ⭐ MOBILE MENU */}
+          {mobileOpen && (
+            <div className="md:hidden bg-[#0D1125]/95 text-white px-6 py-6 space-y-6 shadow-lg">
+
+              <nav className="flex flex-col space-y-4 text-lg font-medium">
+                <Link to="/" onClick={() => setMobileOpen(false)} className="hover:text-cyan-300 transition">Home</Link>
+                <Link to="/course" onClick={() => setMobileOpen(false)} className="hover:text-cyan-300 transition">Courses</Link>
+                <Link to="/about" onClick={() => setMobileOpen(false)} className="hover:text-cyan-300 transition">About Us</Link>
+                <Link to="/webinar" onClick={() => setMobileOpen(false)} className="hover:text-cyan-300 transition">Webinar</Link>
+                <Link to="/contact" onClick={() => setMobileOpen(false)} className="hover:text-cyan-300 transition">Contact Us</Link>
+              </nav>
+
+              {!isLoggedIn ? (
+                <Link
+                  to="/login"
+                  onClick={() => setMobileOpen(false)}
+                  className="block w-full text-center bg-gradient-to-r from-purple-500 to-cyan-400
+                            text-white font-semibold px-7 py-3 rounded-full shadow-lg mt-4"
+                >
+                  Log in / SignUp
+                </Link>
+              ) : (
+                <Link
+                  to="/profile"
+                  onClick={() => setMobileOpen(false)}
+                  className="block w-full text-center text-white font-semibold px-7 py-3 rounded-full mt-4 bg-green-600 shadow-lg"
+                >
+                  My Profile
+                </Link>
+              )}
+            </div>
+          )}
         </div>
       )}
 
       {/* ⭐ HOME NAVBAR */}
       {type === "true" && (
-        <div
-          className="w-full py-4 px-10 flex justify-between items-center 
-                     bg-gradient-to-r from-blue-900 via-blue-700 to-indigo-800
-                     text-white shadow-xl border-b border-indigo-400/40"
-        >
-          {/* Logo */}
-          <Link to={"/home"} className="text-3xl font-extrabold text-white drop-shadow-lg tracking-wide">
-            AnalyixHub
-          </Link>
+        <div className="backdrop-blur-xl bg-[#0B1320]/80 border-b border-white/10 shadow-lg">
+          <div className="max-w-7xl mx-auto pr-4 md:pr-0 py-2 flex justify-between items-center">
 
-          {/* Menu */}
-          <div className="flex items-center gap-8 text-sm font-medium">
-            <Link to="/home" className="hover:text-yellow-300 transition">
-              Home
+            <Link to="/" onClick={() => setMobileOpen(false)}>
+              <img src={logo} alt="logo" className="h-16 md:h-20 lg:h-20 w-auto drop-shadow-xl" />
             </Link>
 
-            <Link to="/course" className="hover:text-yellow-300 transition">
-              Courses
-            </Link>
-            <Link to="/about" className="hover:text-yellow-300 transition">
-              About Us
-            </Link>
-            <Link to="/webinar" className="hover:text-yellow-300 transition">
-              Webinar
-            </Link>
-            <Link to="/contact" className="hover:text-yellow-300 transition">
-              Contact Us
-            </Link>
+            {/* Desktop Menu */}
+            <div className="hidden md:flex items-center gap-8 text-base font-medium text-white">
+              <Link to="/" className="hover:text-cyan-300 transition">Home</Link>
+              <Link to="/course" className="hover:text-cyan-300 transition">Courses</Link>
+              <Link to="/about" className="hover:text-cyan-300 transition">About Us</Link>
+              <Link to="/webinar" className="hover:text-cyan-300 transition">Webinar</Link>
+              <Link to="/contact" className="hover:text-cyan-300 transition">Contact Us</Link>
+            </div>
+
+            {/* Desktop Button */}
+            <div className="hidden md:block">
+              {!isLoggedIn ? (
+                <Link
+                  to="/login"
+                  className="bg-gradient-to-r from-purple-500 to-cyan-400
+                           px-6 py-2 rounded-full font-semibold text-white 
+                           shadow-lg hover:scale-105 transition"
+                >
+                  Log in / SignUp
+                </Link>
+              ) : (
+                <Link
+                  to="/profile"
+                  className="text-white font-semibold hover:text-cyan-300 transition"
+                >
+                  My Profile
+                </Link>
+              )}
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="md:hidden text-white text-3xl"
+              onClick={() => setMobileOpen(!mobileOpen)}
+            >
+              ☰
+            </button>
           </div>
 
-          {/* Login Button */}
-          <Link to="/login"
-            className="bg-gradient-to-r from-yellow-400 to-orange-500
-                       px-5 py-2 rounded-full font-semibold shadow-md hover:scale-105 transition"
-          >
-            Log in / SignUp
-          </Link>
+          {/* ⭐ MOBILE MENU */}
+          {mobileOpen && (
+            <div className="md:hidden bg-[#0B1320]/95 text-white px-6 py-6 space-y-6 shadow-lg">
+
+              <nav className="flex flex-col space-y-4 text-lg font-medium">
+                <Link to="/" onClick={() => setMobileOpen(false)} className="hover:text-cyan-300 transition">Home</Link>
+                <Link to="/course" onClick={() => setMobileOpen(false)} className="hover:text-cyan-300 transition">Courses</Link>
+                <Link to="/about" onClick={() => setMobileOpen(false)} className="hover:text-cyan-300 transition">About Us</Link>
+                <Link to="/webinar" onClick={() => setMobileOpen(false)} className="hover:text-cyan-300 transition">Webinar</Link>
+                <Link to="/contact" onClick={() => setMobileOpen(false)} className="hover:text-cyan-300 transition">Contact Us</Link>
+              </nav>
+
+              {!isLoggedIn ? (
+                <Link
+                  to="/login"
+                  onClick={() => setMobileOpen(false)}
+                  className="block w-full text-center bg-gradient-to-r from-purple-500 to-cyan-400
+                            text-white font-semibold px-7 py-3 rounded-full shadow-lg mt-4"
+                >
+                  Log in / SignUp
+                </Link>
+              ) : (
+                <Link
+                  to="/profile"
+                  onClick={() => setMobileOpen(false)}
+                  className="block w-full text-center text-white font-semibold px-7 py-3 rounded-full mt-4 bg-green-600 shadow-lg"
+                >
+                  My Profile
+                </Link>
+              )}
+            </div>
+          )}
         </div>
       )}
     </div>

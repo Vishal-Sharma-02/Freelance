@@ -1,5 +1,6 @@
 import React from "react";
 import { Mail, Phone } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = ()=>{
   return (
@@ -20,10 +21,10 @@ const Footer = ()=>{
           <h3 className="text-xl font-semibold mb-3">Useful Links</h3>
           <div className="w-10 h-1 bg-yellow-500 mb-4" />
           <ul className="space-y-2 text-gray-300">
-            <li>» Home</li>
-            <li>» About Us</li>
-            <li>» Courses</li>
-            <li>» Contact Us</li>
+            <li> <Link to="/">Home</Link></li>
+            <li> <Link to="/about">About Us</Link></li>
+            <li> <Link to="/course">Courses</Link></li>
+            <li> <Link to="/contact">Contact Us</Link></li>
           </ul>
         </div>
 
@@ -55,15 +56,15 @@ const Footer = ()=>{
 
       {/* Bottom Links */}
       <div className="border-t border-gray-700 mt-12 pt-4 text-center text-gray-300 text-sm flex flex-wrap justify-center gap-6">
-        <span>Privacy Policy</span>
-        <span>Terms & Conditions</span>
-        <span>Refund Policy</span>
-        <span>Pricing Policy</span>
-        <span>Legal Documents</span>
+        <Link to="/privacyPolicy">Privacy Policy</Link>
+        <Link to="/termsCondition">Terms & Conditions</Link>
+        <Link to="/refundPolicy">Refund Policy</Link>
+        <Link to="/pricingPolicy">Pricing Policy</Link>
+        <Link to="/legalDocuments">Legal Documents</Link>
       </div>
 
       {/* Copyright */}
-      <div className="w-full bg-gradient-to-r from-yellow-600 to-yellow-500 text-black py-3 mt-6 text-center font-medium">
+      <div className="w-full text-yellow-800 py-3 mt-6 text-center font-medium">
         © {new Date().getFullYear()} AnaylixHub. All Rights Reserved.
       </div>
     </footer>
