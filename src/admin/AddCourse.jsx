@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { BASE_URL } from "../../utils/constants.jsx";
 
 const AddCourse = () => {
   const [course, setCourse] = useState({
@@ -56,7 +57,7 @@ const AddCourse = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:3000/course/create",
+        `${BASE_URL}/course/create`,
         course,
         { headers: { "Content-Type": "application/json" } }
       );

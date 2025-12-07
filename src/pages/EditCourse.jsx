@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { BASE_URL } from "../utils/constants.jsx";
 
 const EditCourse = () => {
   const { id } = useParams();
@@ -13,7 +14,7 @@ const EditCourse = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/course/${id}`);
+        const res = await axios.get(`${BASE_URL}course/${id}`);
         setCourse(res.data);
         setLoading(false);
       } catch (err) {

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../../utils/userSlice.jsx";
+import { BASE_URL } from "../../utils/constants.jsx";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ const SignUp = () => {
 
   try {
     const res = await axios.post(
-      "http://localhost:3000/auth/register",
+      BASE_URL + "/auth/register",
       {
         fullName: form.fullName,
         emailId: form.emailId,

@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import CourseCard from "../components/CourseCard";
 import { Link } from "react-router-dom";
+import { BASE_URL } from "../utils/constants.jsx";
 
 const Courses = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const API_URL = "http://localhost:3000/course/all";
+  const API_URL = BASE_URL + "/course/all";
 
   useEffect(() => {
     const fetchCourses = async () => {

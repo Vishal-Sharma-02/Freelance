@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import CourseCard from "../components/CourseCard";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { BASE_URL } from "../utils/constants.jsx";
 
 const MyCourses = () => {
   const [courses, setCourses] = useState([]);
@@ -20,7 +21,7 @@ const MyCourses = () => {
 
       try {
         const res = await fetch(
-          `http://localhost:3000/my-courses/${user._id}`
+          `${BASE_URL}/my-courses/${user._id}`
         );
         const data = await res.json();
 

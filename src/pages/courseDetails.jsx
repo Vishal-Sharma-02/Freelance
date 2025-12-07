@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
+import { BASE_URL } from "../utils/constants.jsx";
 
 const CourseDetails = () => {
   const { id } = useParams();
@@ -11,13 +12,13 @@ const CourseDetails = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/course/${id}`);
+        const res = await axios.get(`${BASE_URL}/course/${id}`);
         setCourse(res.data);
 
         const user = JSON.parse(localStorage.getItem("user"));
         if (user) {
           const purchased = await axios.get(
-            `http://localhost:3000/api/purchase/check/${user._id}/${id}`
+            `${BASE_URL}/purchase/check/${user._id}/${id}`
           );
           setIsPurchased(purchased.data.purchased);
         }

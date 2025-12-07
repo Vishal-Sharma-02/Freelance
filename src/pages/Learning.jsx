@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { PlayCircle } from "lucide-react";
+import { BASE_URL } from "../utils/constants.jsx";
 
 const Learning = () => {
   const { id } = useParams();
@@ -10,7 +11,7 @@ const Learning = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const res = await axios.get(`http://localhost:3000/course/${id}`);
+      const res = await axios.get(`${BASE_URL}/course/${id}`);
       setCourse(res.data);
 
       const first = res.data.modules[0]?.lectures[0];
