@@ -38,7 +38,7 @@ const Home = () => {
           <div className="relative flex justify-center md:justify-end">
             <div className="w-72 h-72 md:w-96 md:h-96 rounded-3xl bg-gradient-to-br from-blue-600 to-yellow-500 shadow-2xl transform rotate-6"></div>
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-60 h-60 md:w-80 md:h-80 rounded-3xl bg-white shadow-xl flex items-center justify-center text-2xl font-bold text-blue-800">
-              Learn & Grow
+              Learn with AnaylixHub
             </div>
           </div>
         </div>

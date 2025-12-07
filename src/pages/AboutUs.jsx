@@ -8,9 +8,8 @@ const AboutUs = ()=> {
         <div className="max-w-6xl mx-auto px-6 text-center space-y-6">
           <h1 className="text-4xl md:text-5xl font-bold">About AnaylixHub</h1>
           <p className="text-lg max-w-2xl mx-auto">
-            Empowering learners and professionals with industry-ready analytics
-            skills. At AnaylixHub, we believe learning should be practical,
-            accessible, and tailored for real-world success.
+            We guide learners to improve their creativity, content skills, and
+            social media confidence.
           </p>
         </div>
       </section>
@@ -20,15 +19,14 @@ const AboutUs = ()=> {
         <div>
           <h2 className="text-3xl font-bold mb-4">Who We Are</h2>
           <p className="text-gray-700 leading-relaxed mb-4">
-            AnaylixHub is a modern learning platform dedicated to data
-            analytics, technology, and professional upskilling. We aim to bridge
-            the gap between theoretical knowledge and real industry
+            AnaylixHub is a modern learning platform dedicated to Video Editing,
+            Graphic Design, Script Writing, and Social Media Management. We aim
+            to bridge the gap between theoretical learning and real industry
             expectations.
           </p>
           <p className="text-gray-700 leading-relaxed">
-            Our mission is simple: make high-quality analytics education
-            accessible to everyone — students, working professionals, and
-            businesses.
+            Our mission is simple: make high-quality content for every —
+            students, working professionals, and businesses.
           </p>
         </div>
         <div className="bg-gray-100 p-6 rounded-2xl shadow-md">
@@ -80,8 +78,8 @@ const AboutUs = ()=> {
           <div className="space-y-4">
             <p className="text-gray-700 leading-relaxed">
               We don’t just teach — we mentor. Our programs are built for those
-              who want to excel in the fields of Data Analytics, BI Tools, and
-              Data Science.
+              who want to excel in the fields of Video Editing, Graphic Design,
+              Script Writing, and Social Media Management.
             </p>
             <ul className="list-disc pl-6 text-gray-700 space-y-2">
               <li>Hands-on projects and real datasets</li>
@@ -104,8 +102,7 @@ const AboutUs = ()=> {
       <section className="py-20 bg-blue-900 text-white text-center">
         <h2 className="text-3xl font-bold mb-6">Join the Future of Learning</h2>
         <p className="max-w-2xl mx-auto text-lg mb-8">
-          Be part of a thriving community of learners advancing with data-driven
-          skills. Start your journey with AnaylixHub today.
+          Be part of a thriving community of learners advancing with content related skills. Start your journey with AnaylixHub today.
         </p>
         <button className="px-10 py-3 bg-yellow-400 text-gray-900 rounded-full font-semibold shadow-lg hover:bg-yellow-300 transition">
           Explore Courses

@@ -88,7 +88,9 @@ const SignUp = () => {
       </div>
 
       <div className="max-w-3xl mx-auto mt-10 bg-white p-10 rounded-xl shadow-xl border border-purple-100">
-        <h2 className="text-3xl font-bold text-gray-800">Create Your Account</h2>
+        <h2 className="text-3xl font-bold text-gray-800">
+          Create Your Account
+        </h2>
         <p className="text-gray-600 mt-2 mb-6">
           Welcome! Fill out the details below to get started.
         </p>
@@ -122,6 +124,7 @@ const SignUp = () => {
             onChange={handleChange}
             className="border p-3 rounded-lg w-full"
             placeholder="Full Name"
+            required
           />
 
           {/* EMAIL + CONFIRM EMAIL */}
@@ -132,6 +135,7 @@ const SignUp = () => {
               onChange={handleChange}
               className="border p-3 rounded-lg"
               placeholder="Enter Email"
+              required
             />
             <input
               name="confirmEmail"
@@ -149,6 +153,7 @@ const SignUp = () => {
             onChange={handleChange}
             className="border p-3 rounded-lg w-full"
             placeholder="Mobile Number"
+            required
           />
 
           {/* STATE */}
@@ -179,6 +184,7 @@ const SignUp = () => {
               onChange={handleChange}
               className="border p-3 rounded-lg w-full"
               placeholder="Password"
+              required
             />
             <span
               onClick={() => setShowPassword(!showPassword)}
@@ -197,6 +203,7 @@ const SignUp = () => {
               onChange={handleChange}
               className="border p-3 rounded-lg w-full"
               placeholder="Confirm Password"
+              required
             />
             <span
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}

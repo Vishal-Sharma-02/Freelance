@@ -36,7 +36,7 @@ const ContactUs = () => {
             </div>
             <div>
               <h3 className="text-xl font-semibold">Phone</h3>
-              <p className="text-lg mt-1">7303730943</p>
+              <p className="text-lg mt-1">+91 79798-24380</p>
             </div>
           </div>
 
@@ -49,7 +49,7 @@ const ContactUs = () => {
               <h3 className="text-xl font-semibold text-gray-900">
                 E-mail Address
               </h3>
-              <p className="text-gray-700 mt-1">knowledgewaveindia@gmail.com</p>
+              <p className="text-gray-700 mt-1">anaylixhub@gmail.com</p>
             </div>
           </div>
         </div>
