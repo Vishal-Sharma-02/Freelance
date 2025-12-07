@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { BASE_URL } from "../../utils/constants.jsx";
+import { BASE_URL } from "../utils/constants.jsx";
 
 const AddCourse = () => {
   const [course, setCourse] = useState({

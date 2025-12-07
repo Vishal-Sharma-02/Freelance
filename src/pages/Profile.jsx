@@ -9,7 +9,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-          console.log("HI");
+          console.log(BASE_URL);
         const res = await axios.get(BASE_URL + "/profile/view", {
           withCredentials: true, // 🔥 REQUIRED for JWT cookie
         });
@@ -77,7 +77,7 @@ const Profile = () => {
             <button
               className="px-6 py-3 bg-red-500 text-white rounded-full font-semibold hover:bg-red-600 transition"
               onClick={async () => {
-                await axios.get(BASE_URL + "auth/logout", {
+                await axios.get(BASE_URL + "/auth/logout", {
                   withCredentials: true,
                 });
                 window.location.href = "/login";
