@@ -13,7 +13,7 @@ const Profile = () => {
         const res = await axios.get(BASE_URL + "/profile/view", {
           withCredentials: true, // 🔥 REQUIRED for JWT cookie
         });
-            
+            console.log(res);
         // Your API returns user directly
         setUser(res.data);
 

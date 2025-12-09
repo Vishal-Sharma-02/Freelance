@@ -41,7 +41,7 @@ const LogIn = () => {
         }
       );
 
-      console.log(res.data);
+      console.log("hijjh");
       dispatch(addUser(res.data));
 
       navigate("/profile"); // redirect to home

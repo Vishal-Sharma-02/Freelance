@@ -20,54 +20,57 @@ const LandingPage = () => {
       <div className="min-h-screen bg-gradient-to-br from-black via-[#1c1403] to-[#000000] text-white font-sans pt-20">
 
         {/* HERO SECTION */}
-<div className="w-full bg-gradient-to-br from-black via-[#120d03] to-black pt-24 pb-20 px-44">
-  <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+        <div className="w-full bg-gradient-to-br from-black via-[#120d03] to-black pt-16 pb-16 px-6 sm:px-10 md:px-20 lg:px-32">
 
-    {/* LEFT SIDE CONTENT */}
-    <div className="space-y-6 lg:pr-10">
-      <h1 className="text-4xl md:text-6xl font-extrabold leading-tight text-white">
-        Digital Skill <br />
-        Mastery
-        <br />
-        <span className="text-yellow-400 block mt-3">Only ₹3499</span>
-      </h1>
+          {/* Mobile: Video On Top | Desktop: Side-by-Side */}
+          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
 
-      <p className="text-gray-300 text-lg max-w-md">
-        Stop just scrolling. Start earning! 💰
-      </p>
+            {/* RIGHT SIDE → SHOWS FIRST ON MOBILE */}
+            <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
+              <div
+                className="
+                  w-full
+                  max-w-[620px]
+                  rounded-2xl
+                  overflow-hidden
+                  bg-[#00000050]
+                  backdrop-blur
+                  shadow-[0_0_35px_rgba(0,0,0,0.45)]
+                  border border-[#2b2b2b]
+                "
+              >
+                <VideoPlayer />
+              </div>
+            </div>
 
-      {/* CTA BUTTON*/}
-      <Link
-        to="/signup"
-        className="inline-block mt-4 relative p-[2px] rounded-lg bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500 group"
-      >
-        <span
-          className="block px-8 py-4 bg-[#1c1607] rounded-lg text-white font-bold text-lg group-hover:bg-[#2a210a] transition"
-        >
-          Get Instant Access for ₹3499
-        </span>
-      </Link>
-    </div>
+            {/* LEFT SIDE CONTENT → SHOWS BELOW VIDEO ON MOBILE */}
+            <div className="order-2 lg:order-1 space-y-6 lg:pr-10 text-center lg:text-left">
+              <h1 className="text-4xl md:text-6xl font-extrabold leading-tight text-white">
+                Digital Skill <br />
+                Mastery
+                <br />
+                <span className="text-yellow-400 block mt-3">Only ₹3499</span>
+              </h1>
 
-    {/* RIGHT SIDE VIDEO */}
-    <div className="flex justify-center lg:justify-end">
-      <div className="
-        w-full 
-        max-w-[620px]      /* INCREASED VIDEO WIDTH */
-        rounded-2xl 
-        overflow-hidden 
-        bg-[#00000050] 
-        backdrop-blur 
-        shadow-[0_0_35px_rgba(0,0,0,0.45)] 
-        border border-[#2b2b2b]
-      ">
-        <VideoPlayer />
-      </div>
-    </div>
+              <p className="text-gray-300 text-lg max-w-md mx-auto lg:mx-0">
+                Stop just scrolling. Start earning! 💰
+              </p>
 
-  </div>
-</div>
+              {/* CTA BUTTON */}
+              <Link
+                to="/signup"
+                className="inline-block mt-4 relative p-[2px] rounded-lg bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500 group"
+              >
+                <span
+                  className="block px-8 py-4 bg-[#1c1607] rounded-lg text-white font-bold text-lg group-hover:bg-[#2a210a] transition"
+                >
+                  Get Instant Access for ₹3499
+                </span>
+              </Link>
+            </div>
 
+          </div>
+        </div>
 
         {/* MASTERY PACK */}
         <div className="max-w-6xl mx-auto mt-20 text-center px-5">
@@ -80,43 +83,39 @@ const LandingPage = () => {
           </p>
 
           {/* FEATURE GRID */}
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 mt-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 mt-12">
+            {masteryItems.map((text, i) => (
+              <div
+                key={i}
+                className="
+                  p-[3px]
+                  rounded-2xl
+                  bg-gradient-to-r from-yellow-400 to-orange-500
+                  shadow-[0_0_30px_rgba(255,180,0,0.25)]
+                  hover:scale-[1.03]
+                  transition
+                "
+              >
+                <div
+                  className="
+                    bg-[#111111]
+                    rounded-2xl
+                    h-40
+                    flex
+                    items-center
+                    px-5
+                    gap-4
+                  "
+                >
+                  <span className="text-yellow-400 text-3xl">⭐</span>
 
-  {masteryItems.map((text, i) => (
-    <div
-      key={i}
-      className="
-        p-[3px] 
-        rounded-2xl 
-        bg-gradient-to-r from-yellow-400 to-orange-500 
-        shadow-[0_0_30px_rgba(255,180,0,0.25)]
-        hover:scale-[1.03] 
-        transition
-      "
-    >
-      <div
-        className="
-          bg-[#111111] 
-          rounded-2xl 
-          h-40 
-          flex 
-          items-center 
-          px-5 
-          gap-4
-        "
-      >
-        {/* STAR ICON */}
-        <span className="text-yellow-400 text-3xl">⭐</span>
-
-        {/* TITLE */}
-        <p className="text-white font-semibold text-lg leading-snug">
-          {text}
-        </p>
-      </div>
-    </div>
-  ))}
-
-</div>
+                  <p className="text-white font-semibold text-lg leading-snug">
+                    {text}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
 
           {/* ENROLL BUTTON */}
           <Link
@@ -133,7 +132,7 @@ const LandingPage = () => {
 
         {/* ABOUT TEXT */}
         <div className="max-w-5xl mx-auto mt-16 text-center text-gray-400 px-5 leading-relaxed">
-          Anaylix Hub is your direct path to monetizing your student life.  
+          Anaylix Hub is your direct path to monetizing your student life.
           We teach real, in-demand digital skills with a complete earning roadmap.
         </div>
 
@@ -141,6 +140,7 @@ const LandingPage = () => {
         <div className="text-center text-gray-500 text-sm py-10 mt-10">
           © 2025 Knowledge Wave India — All Rights Reserved
         </div>
+
       </div>
     </div>
   );

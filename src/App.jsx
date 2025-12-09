@@ -23,7 +23,7 @@ import AddCourse from './admin/AddCourse.jsx';
 import CourseDetails from './pages/CourseDetails.jsx';
 import Learning from './pages/Learning.jsx';
 import EditCourse from './pages/EditCourse.jsx';
-import MyCourses from './pages/PurchasedCourses.jsx';
+import PaymentStart from './pages/PaymentStart.jsx';
 
 export default function App() {
   return (
@@ -46,7 +46,7 @@ export default function App() {
             <Route path='/profile' element={<Profile />} />
             <Route path="/addcourse" element={<AddCourse />} />
             <Route path="/editcourse/:id" element={<EditCourse />} />
-            <Route path="/my-courses" element={<MyCourses />} />
+            <Route path="/payment-start" element={<PaymentStart />} />
 
           <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/termsCondition" element={<TermsCondition />} />

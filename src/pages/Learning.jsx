@@ -27,31 +27,33 @@ const Learning = () => {
     <div className="min-h-screen bg-[#F5F7FA]">
 
       {/* TOP HEADER */}
-      <div className="bg-white px-36 py-5 shadow-sm border-b sticky top-0 z-20">
-        <h1 className="text-2xl font-bold text-gray-900">{course.title}</h1>
+      <div className="bg-white px-6 md:px-36 py-5 shadow-sm border-b sticky top-0 z-20">
+        <h1 className="text-xl md:text-2xl font-bold text-gray-900">{course.title}</h1>
         <p className="text-sm text-gray-500 mt-1">
           {course.modules.length} Modules • {course.totalLectures} Lectures
         </p>
       </div>
 
       {/* MAIN CONTENT */}
-      <div className="max-w-7xl mx-auto p-6 flex gap-8">
+      <div className="max-w-7xl mx-auto p-4 md:p-6 flex flex-col md:flex-row gap-8">
 
         {/* LEFT - VIDEO PLAYER SECTION */}
-        <div className="flex-1">
-          
+        <div className="flex-1 order-1">
+
           {/* Video Card */}
-          <div className="bg-white shadow-md rounded-2xl border p-5">
-            <div className="w-full h-[460px] bg-black rounded-xl overflow-hidden">
+          <div className="bg-white shadow-md rounded-2xl border p-4 md:p-5">
+            
+            {/* Responsive Video */}
+            <div className="w-full h-[220px] sm:h-[300px] md:h-[460px] bg-black rounded-xl overflow-hidden flex items-center justify-center">
               <video
                 src={currentVideo?.videoUrl}
                 controls
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain bg-black"
               />
             </div>
 
             {/* Video Title */}
-            <h2 className="text-xl font-semibold text-gray-900 mt-5">
+            <h2 className="text-lg md:text-xl font-semibold text-gray-900 mt-4">
               {currentVideo?.title}
             </h2>
 
@@ -60,14 +62,14 @@ const Learning = () => {
             </p>
 
             {/* Description */}
-            <p className="text-gray-700 mt-4 leading-relaxed text-[15px]">
+            <p className="text-gray-700 mt-3 md:mt-4 leading-relaxed text-[14px] md:text-[15px]">
               {currentVideo?.description || "No description available"}
             </p>
           </div>
         </div>
 
         {/* RIGHT - MODULE LIST SECTION */}
-        <div className="w-[360px] bg-white shadow-md rounded-2xl border p-5 h-fit sticky top-24 max-h-[85vh] overflow-y-auto">
+        <div className="order-2 w-full md:w-[360px] bg-white shadow-md rounded-2xl border p-4 md:p-5 h-fit md:sticky md:top-24 max-h-[85vh] overflow-y-auto">
 
           <h3 className="text-lg font-semibold text-gray-900 mb-4">
             Course Content
@@ -75,8 +77,7 @@ const Learning = () => {
 
           {course.modules.map((mod, i) => (
             <div key={i} className="mb-6">
-
-              <h4 className="font-semibold text-gray-800 mb-3 text-[17px]">
+              <h4 className="font-semibold text-gray-800 mb-3 text-[16px] md:text-[17px]">
                 {i + 1}. {mod.moduleTitle}
               </h4>
 
@@ -89,29 +90,22 @@ const Learning = () => {
                       key={j}
                       onClick={() => setCurrentVideo(lec)}
                       className={`flex justify-between items-center p-3 rounded-lg cursor-pointer border transition
-                        ${
-                          isActive
-                            ? "bg-blue-50 border-blue-400 border-l-4"
-                            : "bg-gray-50 hover:bg-gray-100 border-gray-200"
-                        }
-                      `}
+                        ${isActive
+                          ? "bg-blue-50 border-blue-400 border-l-4"
+                          : "bg-gray-50 hover:bg-gray-100 border-gray-200"
+                        }`}
                     >
                       <div className="flex items-start gap-3">
 
                         {/* Play Icon */}
                         <PlayCircle
                           size={22}
-                          className={`${
-                            isActive ? "text-blue-600" : "text-gray-500"
-                          } mt-1`}
+                          className={`${isActive ? "text-blue-600" : "text-gray-500"} mt-1`}
                         />
 
                         <div>
-                          <p
-                            className={`text-[15px] font-medium ${
-                              isActive ? "text-blue-700" : "text-gray-800"
-                            }`}
-                          >
+                          <p className={`text-[14.5px] md:text-[15px] font-medium 
+                              ${isActive ? "text-blue-700" : "text-gray-800"}`}>
                             {j + 1}. {lec.title}
                           </p>
 
@@ -128,6 +122,7 @@ const Learning = () => {
           ))}
 
         </div>
+
       </div>
     </div>
   );

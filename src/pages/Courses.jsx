@@ -41,26 +41,8 @@ const Courses = () => {
             Explore our expertly crafted courses designed to help you grow and excel.
           </p>
         </div>
-
-        {/* MY COURSES BUTTON */}
-        <Link
-          to="/my-courses"
-          className="px-5 py-2 bg-blue-600 text-white font-semibold rounded-full shadow-md hover:bg-blue-700 transition hidden md:block"
-        >
-          My Courses →
-        </Link>
+        
       </div>
-
-      {/* If mobile screen, show button inside section */}
-      <div className="md:hidden text-center mb-8">
-        <Link
-          to="/my-courses"
-          className="px-5 py-2 bg-blue-600 text-white font-semibold rounded-full shadow-md hover:bg-blue-700 transition"
-        >
-          My Courses →
-        </Link>
-      </div>
-
       {/* LOADING */}
       {loading && (
         <p className="text-center text-lg text-gray-500">Loading courses...</p>
