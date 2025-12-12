@@ -1,10 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
 import { BASE_URL } from "../utils/constants";
+import { useNavigate } from "react-router-dom";
+import { removeUser } from "../utils/userSlice";
+import { persistor } from "../utils/appStore";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -28,6 +35,23 @@ const Profile = () => {
     fetchProfile();
   }, []);
 
+  
+  const handleLogout = async () => {
+    try {
+      await axios.get(BASE_URL + "/auth/logout", {
+        withCredentials: true
+      });
+      
+      dispatch(removeUser());      // remove from redux
+      await persistor.purge();     // clear persisted storage
+      
+      navigate("/");               // redirect to home
+    } catch (err) {
+      console.error(err);
+      alert("Logout failed. Please try again.");
+    }
+  };
+  
   if (loading) {
     return (
       <div className="min-h-screen flex justify-center items-center text-xl">
@@ -75,12 +99,7 @@ const Profile = () => {
             
             <button
               className="px-6 py-3 bg-red-500 text-white rounded-full font-semibold hover:bg-red-600 transition"
-              onClick={async () => {
-                await axios.get(BASE_URL + "/auth/logout", {
-                  withCredentials: true,
-                });
-                window.location.href = "/login";
-              }}
+              onClick={handleLogout}
             >
               Logout
             </button>

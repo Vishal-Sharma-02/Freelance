@@ -13,7 +13,6 @@ const VideoPlayer = () => {
     video.muted = true;
     video.playsInline = true;
 
-    // Load HLS or fallback
     if (video.canPlayType("application/vnd.apple.mpegurl")) {
       video.src = url;
       video.play().catch(() => {});
@@ -32,20 +31,24 @@ const VideoPlayer = () => {
 
   const handlePlayClick = () => {
     const video = videoRef.current;
-
-    // 🔥 Restart from beginning
     video.currentTime = 0;
-
     video.muted = false;
     video.volume = 1;
     video.play();
-
     setHasStarted(true);
   };
 
   return (
-    <div className="relative w-full h-[260px] md:h-[300px] lg:h-[340px] xl:h-[370px] rounded-xl overflow-hidden">
-      
+    <div
+      className="
+        w-full 
+        aspect-video 
+        relative 
+        bg-black 
+        rounded-xl 
+        overflow-hidden
+      "
+    >
       {/* VIDEO */}
       <video
         ref={videoRef}
@@ -53,27 +56,30 @@ const VideoPlayer = () => {
         muted
         playsInline
         controls={hasStarted}
-        className="absolute top-0 left-0 w-full h-full object-cover"
+        className="w-full h-full object-contain bg-black"
       />
 
-      {/* PLAY BUTTON — Only before playing */}
+      {/* PLAY BUTTON */}
       {!hasStarted && (
         <button
           onClick={handlePlayClick}
-          className="absolute inset-0 flex items-center justify-center bg-black/20 transition"
-        >
-          {/* Premium clean play button */}
-          <div className="
+          className="
+            absolute inset-0 
             flex items-center justify-center
-            w-20 h-20 
-            rounded-full 
-            bg-black/50 
-            border border-white/40
-            backdrop-blur-sm
-            shadow-xl
-            hover:bg-black/60
-            transition
-          ">
+            bg-black/20
+          "
+        >
+          <div
+            className="
+              flex items-center justify-center
+              w-20 h-20
+              rounded-full
+              bg-black/60
+              border border-white/30
+              backdrop-blur-sm
+              shadow-lg
+            "
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="white"

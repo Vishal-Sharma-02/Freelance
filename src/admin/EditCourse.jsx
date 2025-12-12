@@ -93,7 +93,7 @@ const EditCourse = () => {
 
     try {
       const res = await axios.put(
-        `http://localhost:3000/course/update/${course._id}`,
+        `${BASE_URL}/course/update/${course._id}`,
         course,
         { headers: { "Content-Type": "application/json" } }
       );

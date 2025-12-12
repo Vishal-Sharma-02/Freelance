@@ -21,7 +21,19 @@ const Learning = () => {
     fetch();
   }, [id]);
 
-  if (!course) return <p className="text-center mt-20 text-lg">Loading...</p>;
+// FULL PAGE LOADING SCREEN
+if (!course) {
+  return (
+    <div className="w-full h-screen flex flex-col items-center justify-center bg-[#F5F7FA]">
+      <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+
+      <p className="text-gray-700 text-lg font-medium mt-4">
+        Loading course...
+      </p>
+    </div>
+  );
+}
+
 
   return (
     <div className="min-h-screen bg-[#F5F7FA]">

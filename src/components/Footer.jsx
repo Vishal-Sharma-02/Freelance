@@ -59,7 +59,7 @@ const Footer = ()=>{
           <div className="w-10 h-1 bg-yellow-500 mb-4" />
 
           <p className="flex items-center gap-2 text-gray-300 mb-3">
-            <Phone size={18} /> +91 7979824380
+            <Phone size={18} /> +91 8210667664
           </p>
           <p className="flex items-center gap-2 text-gray-300">
             <Mail size={18} /> support@anaylixhub.in

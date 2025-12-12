@@ -2,7 +2,8 @@ import React from 'react'
 import './App.css'
 import { BrowserRouter,Routes, Route } from 'react-router-dom';
 import { Provider} from "react-redux"
-import appStore from './utils/appStore.jsx';
+import { PersistGate } from "redux-persist/integration/react";
+import appStore ,{ persistor } from './utils/appStore.jsx';
 import Body from './pages/Body';
 import Home from './pages/Home';
 import LogIn from './pages/auth/Login';
@@ -28,13 +29,16 @@ import PaymentStatus from './pages/PaymentStatus.jsx';
 import ForgotPassword from './pages/ForgotPassword.jsx';
 import VerifyOtp from './pages/VerifyOtp.jsx';
 import ResetPassword from './pages/ResetPassword.jsx';
+import ScrollToTop from "./components/ScrollToTop"; 
+import ProtectedRoute from './hooks/ProtectedRoute.jsx';
 
 export default function App() {
   return (
       
       <Provider store={appStore}>
-
+        <PersistGate loading={null} persistor={persistor}>
       <BrowserRouter>
+      <ScrollToTop />
         <Routes>
             <Route path='/anaylixpromo' element={<LandingPage/>} />
           <Route path='/' element={<Body />}>
@@ -45,13 +49,13 @@ export default function App() {
             <Route path='/signup' element={<SignUp />} />
             <Route path='/course' element={<Courses/>} />
             <Route path='/course/:id' element={<CourseDetails/>} />
-            <Route path='/learn/:id' element={<Learning/>} />
+            <Route path='/learn/:id' element={<ProtectedRoute><Learning /></ProtectedRoute>} />
             <Route path='/about' element={<AboutUs/>} />
-            <Route path='/profile' element={<Profile />} />
-            <Route path="/addcourse" element={<AddCourse />} />
-            <Route path="/editcourse/:id" element={<EditCourse />} />
-            <Route path="/payment-start" element={<PaymentStart />} />
-            <Route path="/payment-status" element={<PaymentStatus />} />
+            <Route path='/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="/addcourse" element={<ProtectedRoute><AddCourse /></ProtectedRoute>} />
+            <Route path="/editcourse/:id" element={<ProtectedRoute><EditCourse /></ProtectedRoute>} />
+            <Route path="/payment-start" element={<ProtectedRoute><PaymentStart /></ProtectedRoute>} />
+            <Route path="/payment-status" element={<ProtectedRoute><PaymentStatus /></ProtectedRoute>} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/verify-otp" element={<VerifyOtp />} />
             <Route path="/reset-password" element={<ResetPassword />} />
@@ -65,6 +69,7 @@ export default function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+      </PersistGate>
       </Provider>
   );
 }

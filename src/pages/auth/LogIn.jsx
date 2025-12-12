@@ -1,27 +1,33 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useDispatch,useSelector } from "react-redux";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { addUser } from "../../utils/userSlice.jsx";
 import { BASE_URL } from "../../utils/constants.jsx";
+import { persistor } from "../../utils/appStore";
 
 const LogIn = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
 
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState(""); // ⭐ NEW
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const togglePassword = () => {
-    setShowPass(!showPass);
-  };
+  const togglePassword = () => setShowPass(!showPass);
+
+  useEffect(() => {
+    if (user) {
+      navigate("/profile");  // Already logged in → redirect
+    }
+  }, []);
 
   const handleClick = async (e) => {
     e.preventDefault();
-    setErrorMsg(""); // Clear old errors
+    setErrorMsg("");
 
     if (!emailId || !password) {
       setErrorMsg("Please enter both email and password");
@@ -31,116 +37,125 @@ const LogIn = () => {
     try {
       setLoading(true);
 
-      const res = await axios.post(
+      // Login
+      await axios.post(
         BASE_URL + "/auth/login",
         { emailId, password },
         { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );
 
-      dispatch(addUser(res.data));
-      navigate("/profile");
+      // Fetch user
+      const userRes = await axios.get(BASE_URL + "/profile/view", {
+        withCredentials: true,
+      });
 
+      const user = userRes.data;
+
+      if (!user || !user.emailId) {
+        return setErrorMsg("Login successful but failed to load user data.");
+      }
+
+      dispatch(addUser(user));
+      await persistor.flush();
+
+      navigate("/profile");
     } catch (err) {
-      console.error(err);
       const message =
         err.response?.data?.message || "Invalid credentials. Please try again.";
-      setErrorMsg(message); // ⭐ Show backend error
+      setErrorMsg(message);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-r from-purple-100 to-purple-50 flex flex-col items-center pt-10">
-      <div className="w-full max-w-5xl px-6">
-        <h1 className="text-4xl font-bold text-gray-800">Login</h1>
-        <p className="text-gray-500 mt-2">Home &gt; Login</p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-purple-200 via-purple-100 to-purple-50 flex items-center justify-center px-4 py-10">
 
-      <div className="w-full max-w-5xl mt-12 px-6">
-        <h2 className="text-3xl font-semibold text-gray-900">Hey! Welcome Back</h2>
-        <p className="text-gray-600 mt-2">Login to your account to continue</p>
+      {/* Main Card */}
+      <div className="w-full max-w-md bg-white/70 backdrop-blur-xl shadow-2xl rounded-2xl p-8 border border-white">
 
-        <form className="mt-8 max-w-md">
+        {/* Heading */}
+        <h1 className="text-4xl font-extrabold text-gray-900 text-center drop-shadow">
+          Welcome Back
+        </h1>
+        <p className="text-gray-600 text-center mt-2">
+          Login to continue your learning journey
+        </p>
 
-          {/* Error Message */}
-          {errorMsg && (
-            <p className="bg-red-100 text-red-700 px-4 py-2 rounded-lg mb-4">
-              {errorMsg}
-            </p>
-          )}
+        
+
+        {/* Form */}
+        <form className="mt-8">
 
           {/* Email */}
-          <label htmlFor="email" className="block font-medium text-gray-800">
-            Email / Id.
-          </label>
+          <label className="block font-medium text-gray-800">Email Address</label>
           <input
             type="email"
-            id="email"
-            placeholder="Enter your Mail/Id"
+            placeholder="Enter your email"
             value={emailId}
-            onChange={(e) => {
-              setEmailId(e.target.value);
-              setErrorMsg(""); // clear error when typing
-            }}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 mb-4 focus:outline-none focus:ring-2 focus:ring-purple-300"
+            onChange={(e) => { setEmailId(e.target.value); setErrorMsg(""); }}
+            className="w-full border border-gray-300 rounded-lg px-4 py-3 mt-1 mb-5 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm"
           />
 
           {/* Password */}
-          <label htmlFor="password" className="block font-medium text-gray-800">
-            Password
-          </label>
-
+          <label className="block font-medium text-gray-800">Password</label>
           <div className="relative">
             <input
               type={showPass ? "text" : "password"}
-              id="password"
-              placeholder="Enter Password"
+              placeholder="Enter your password"
               value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                setErrorMsg(""); // clear error when typing
-              }}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-300"
+              onChange={(e) => { setPassword(e.target.value); setErrorMsg(""); }}
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm"
             />
 
             <button
               type="button"
               onClick={togglePassword}
-              className="absolute right-3 top-3 text-sm text-blue-700 underline"
+              className="absolute right-4 top-4 text-sm text-purple-700"
             >
               {showPass ? "Hide" : "Show"}
             </button>
           </div>
 
-          {/* Forgot Password */}
-          <p className="text-blue-600 text-sm mt-2 cursor-pointer">Forgot Password?</p>
+          {/* Forgot Password Link */}
+          <div className="text-right mt-2">
+            <Link to="/forgot-password" className="text-purple-700 text-sm hover:underline">
+              Forgot Password?
+            </Link>
+          </div>
+
+          {/* Error Message */}
+        {errorMsg && (
+          <p className="bg-red-100 text-red-700 px-4 py-2 rounded-lg mt-5 text-sm text-center border border-red-300">
+            {errorMsg}
+          </p>
+        )}
 
           {/* Sign In Button */}
           <button
             onClick={handleClick}
             disabled={loading}
-            className="mt-6 w-40 bg-yellow-600 text-white px-5 py-2 rounded-full shadow-lg hover:bg-yellow-700 transition disabled:bg-gray-400"
+            className="mt-6 w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-full shadow-lg transition disabled:bg-gray-400"
           >
             {loading ? "Signing In..." : "Sign In →"}
           </button>
 
-          {/* Sign Up */}
-          <p className="mt-4 text-gray-700">
-            Don't have an account?
-            <Link to="/signup" className="text-blue-600 ml-1">
+          {/* Separator */}
+          <div className="flex items-center my-6">
+            <div className="flex-1 h-px bg-gray-300"></div>
+            <span className="px-3 text-gray-500 text-sm">OR</span>
+            <div className="flex-1 h-px bg-gray-300"></div>
+          </div>
+
+          {/* Create Account */}
+          <p className="text-center text-gray-700">
+            Don’t have an account?
+            <Link to="/signup" className="text-purple-700 font-semibold hover:underline ml-1">
               Sign Up
             </Link>
           </p>
-
-          {/* Forget Password */}
-          <p className="mt-4 text-gray-700">
-            Forget Password?
-            <Link to="/forgot-password" className="text-blue-600 ml-1">
-              Reset Here
-            </Link>
-          </p>
         </form>
+
       </div>
     </div>
   );

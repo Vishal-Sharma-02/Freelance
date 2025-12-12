@@ -28,15 +28,15 @@ const CourseDetails = () => {
   // VERIFY SUBSCRIPTION
   // -------------------------------------------------------
   const verifyUserSubscription = async () => {
-    try {
-      const res = await axios.get(BASE_URL + "/premium/verify", {
-        withCredentials: true,
-      });
-      if (res.data.isSubscribed) setIsUserSubscribed(true);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  try {
+    const res = await axios.get(`${BASE_URL}/premium/verify`, {
+      withCredentials: true,
+    });
+    setIsUserSubscribed(res.data.isSubscribed);
+  } catch {
+    setIsUserSubscribed(false);
+  }
+};
 
   // -------------------------------------------------------
   // FETCH COURSE DATA
@@ -62,40 +62,72 @@ const CourseDetails = () => {
   // -------------------------------------------------------
   // BUY BUTTON CLICK
   // -------------------------------------------------------
-  const handleBuy = () => {
-  if (!user) {
-    navigate(`/signup?course=${id}`); // better UX
-    return;
-  }
+ const handleBuy = async () => {
+  try {
+    // 🔥 1. Verify backend session ― avoid trusting Redux only
+    const res = await axios.get(`${BASE_URL}/profile/view`, {
+      withCredentials: true,
+    });
 
-  startPayment(
-    user,
-    () => navigate("/payment-status?success=true"),
-    () => navigate("/payment-status?success=false")
-  );
+    const verifiedUser = res.data;
+
+    // If no user → redirect
+    if (!verifiedUser) {
+      navigate("/signup");
+      return;
+    }
+
+    const sub = await axios.get(`${BASE_URL}/premium/verify`, {
+        withCredentials: true,
+      });
+      if (sub.data.isSubscribed) {
+        return navigate(`/learn/${course._id}`);
+    }
+
+    // 🔥 2. Start payment using fresh user
+    startPayment(
+      verifiedUser,
+      () => navigate("/payment-status?success=true"),
+      () => navigate("/payment-status?success=false")
+    );
+
+  } catch (err) {
+    // Backend says user not logged in
+    navigate("/signup");
+  }
 };
+
 
   // -------------------------------------------------------
   // AUTO PAYMENT AFTER SIGNUP
   // -------------------------------------------------------
-  useEffect(() => {
-  if (autoPay && user && !isUserSubscribed && !paymentStarted.current) {
+//   useEffect(() => {
+//   if (autoPay && user && !isUserSubscribed && !paymentStarted.current) {
 
-    paymentStarted.current = true;
+//     paymentStarted.current = true;
 
-    startPayment(
-      user,
-      () => navigate("/payment-status?success=true"),
-      () => navigate("/payment-status?success=false")
-    );
-  }
-}, [autoPay, user, isUserSubscribed]);
+//     startPayment(
+//       user,
+//       () => navigate("/payment-status?success=true"),
+//       () => navigate("/payment-status?success=false")
+//     );
+//   }
+// }, [autoPay, user, isUserSubscribed]);
 
 
   // -------------------------------------------------------
   // LOADING STATES
   // -------------------------------------------------------
-  if (loading) return <p className="text-center text-lg">Loading...</p>;
+  if (loading) {
+  return (
+    <div className="w-full h-screen flex items-center justify-center bg-white">
+      <div className="flex flex-col items-center gap-3">
+        <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-gray-700 text-lg font-medium">Loading...</p>
+      </div>
+    </div>
+  );
+}
   if (!course) return <p>Course not found.</p>;
 
   // -------------------------------------------------------
@@ -113,7 +145,7 @@ const CourseDetails = () => {
                 h-[220px] sm:h-[280px] md:h-[340px] lg:h-[380px] xl:h-[420px] 
                 flex items-center justify-center">
 
-  {course.trailerVideo ? (
+  {/* {course.trailerVideo ? (
     <video
       src={course.trailerVideo}
       autoPlay
@@ -122,13 +154,13 @@ const CourseDetails = () => {
       controls
       className="w-full h-full object-contain bg-black"
     />
-  ) : (
+  ) : ( */}
     <img
       src={course.thumbnail}
       alt={course.title}
       className="w-full h-full object-contain bg-black"
     />
-  )}
+  {/* )} */}
 
 </div>
 

@@ -1,27 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { Link,useLocation } from "react-router-dom";
-import axios from "axios";
-import logo from "../assets/logo1.png";
-import { BASE_URL } from "../utils/constants";
+import React, {useState } from "react";
+import { Link} from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Navbar = ({ type }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const location = useLocation();
-  // 🔥 CHECK USER LOGIN STATUS
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const res = await axios.get(BASE_URL + "/profile/view", {
-          withCredentials: true,
-        });
-        if (res.data) setIsLoggedIn(true);
-      } catch (error) {
-        setIsLoggedIn(false);
-      }
-    };
-    checkAuth();
-  }, [location.pathname]);
+ 
+   // ⭐ CHECK LOGIN FROM REDUX STORE (PERSISTED)
+  const user = useSelector((state) => state.user);
+  const isLoggedIn = Boolean(user && user._id);
+  console.log(user);
+    
 
   return (
     <div className="w-full fixed top-0 left-0 z-50">
@@ -29,10 +17,10 @@ const Navbar = ({ type }) => {
       {/* ⭐ LANDING NAVBAR */}
       {type === "false" && (
         <div className="backdrop-blur-xl bg-[#0D1125]/80 border-b border-white/10 shadow-lg">
-          <div className="max-w-7xl mx-auto px-14 py-2 flex justify-between items-center">
+          <div className="max-w-7xl mx-auto  py-2 flex justify-between items-center">
             
             <Link to="/" onClick={() => setMobileOpen(false)}>
-              <img src={logo} alt="logo" className="h-16 md:h-20 lg:h-20 w-auto drop-shadow-xl" />
+              <img src="https://res.cloudinary.com/dhulhgd5y/image/upload/v1765559052/logo2_fjpbok.png" alt="logo" className="h-16 md:h-20 lg:h-20 w-auto drop-shadow-xl" />
             </Link>
 
             {/* Desktop: Show Purchase OR Profile */}
@@ -57,7 +45,7 @@ const Navbar = ({ type }) => {
             </div>
 
             <button
-              className="md:hidden text-white text-3xl"
+              className="md:hidden text-white text-3xl pr-5"
               onClick={() => setMobileOpen(!mobileOpen)}
             >
               ☰
@@ -105,7 +93,7 @@ const Navbar = ({ type }) => {
           <div className="max-w-7xl mx-auto pr-4 md:pr-0 py-2 flex justify-between items-center">
 
             <Link to="/" onClick={() => setMobileOpen(false)}>
-              <img src={logo} alt="logo" className="h-16 md:h-20 lg:h-20 w-auto drop-shadow-xl" />
+              <img src="https://res.cloudinary.com/dhulhgd5y/image/upload/v1765559052/logo2_fjpbok.png" alt="logo" className="h-16 md:h-20 lg:h-20 w-auto drop-shadow-xl" />
             </Link>
 
             {/* Desktop Menu */}
