@@ -97,24 +97,6 @@ const CourseDetails = () => {
   }
 };
 
-
-  // -------------------------------------------------------
-  // AUTO PAYMENT AFTER SIGNUP
-  // -------------------------------------------------------
-//   useEffect(() => {
-//   if (autoPay && user && !isUserSubscribed && !paymentStarted.current) {
-
-//     paymentStarted.current = true;
-
-//     startPayment(
-//       user,
-//       () => navigate("/payment-status?success=true"),
-//       () => navigate("/payment-status?success=false")
-//     );
-//   }
-// }, [autoPay, user, isUserSubscribed]);
-
-
   // -------------------------------------------------------
   // LOADING STATES
   // -------------------------------------------------------
