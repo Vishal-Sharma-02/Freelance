@@ -19,13 +19,13 @@ const Navbar = ({ type }) => {
         <div className="backdrop-blur-xl bg-[#0D1125]/80 border-b border-white/10 shadow-lg">
           <div className="max-w-7xl mx-auto  py-2 flex justify-between items-center">
             
-            <Link to="/" onClick={() => setMobileOpen(false)}>
+            <Link to="/anaylixpromo" onClick={() => setMobileOpen(false)}>
               <img src="https://res.cloudinary.com/dhulhgd5y/image/upload/v1765559052/logo2_fjpbok.png" alt="logo" className="h-16 md:h-20 lg:h-20 w-auto drop-shadow-xl" />
             </Link>
 
             {/* Desktop: Show Purchase OR Profile */}
             <div className="hidden md:block">
-              {!isLoggedIn ? (
+             
                 <Link
                   to="/signup"
                   className="bg-gradient-to-r from-purple-500 to-cyan-400
@@ -34,14 +34,7 @@ const Navbar = ({ type }) => {
                 >
                   PURCHASE NOW
                 </Link>
-              ) : (
-                <Link
-                  to="/profile"
-                  className="text-white text-lg font-semibold hover:text-cyan-300 transition"
-                >
-                  My Profile
-                </Link>
-              )}
+        
             </div>
 
             <button

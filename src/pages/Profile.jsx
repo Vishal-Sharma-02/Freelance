@@ -2,7 +2,7 @@ import React, {useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { BASE_URL } from "../utils/constants";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { removeUser } from "../utils/userSlice";
 import { persistor } from "../utils/appStore";
 
@@ -96,7 +96,12 @@ const Profile = () => {
 
           {/* BUTTONS */}
           <div className="mt-8 flex gap-4">
-            
+             <Link to={"/course"}
+    className="px-6 py-3 bg-indigo-600 text-white rounded-full font-semibold hover:bg-indigo-700 transition"
+  >
+    My Courses
+  </Link>
+
             <button
               className="px-6 py-3 bg-red-500 text-white rounded-full font-semibold hover:bg-red-600 transition"
               onClick={handleLogout}
