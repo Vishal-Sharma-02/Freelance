@@ -68,7 +68,7 @@ const ContactUs = () => {
             </div>
             <div>
               <h3 className="text-xl font-semibold">Phone</h3>
-              <p className="text-lg mt-1">+91 79798-24380</p>
+              <p className="text-lg mt-1">+91 82106-67664</p>
             </div>
           </div>
 
