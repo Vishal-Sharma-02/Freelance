@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import CourseCard from "../components/CourseCard";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { BASE_URL } from "../utils/constants.jsx";
+import api from "../utils/axiosInstance";
 
 const MyCourses = () => {
   const [courses, setCourses] = useState([]);
@@ -12,30 +12,27 @@ const MyCourses = () => {
   const user = useSelector((state) => state.user);
 
   useEffect(() => {
-    const fetchCourses = async () => {
-      if (!user) {
-        setError("Please log in to view your purchased courses.");
-        setLoading(false);
-        return;
-      }
+  const fetchCourses = async () => {
+    if (!user || !user._id) {
+      setError("Please log in to view your purchased courses.");
+      setLoading(false);
+      return;
+    }
 
-      try {
-        const res = await fetch(
-          `${BASE_URL}/my-courses/${user._id}`
-        );
-        const data = await res.json();
+    try {
+      const res = await api.get(`/my-courses/${user._id}`);
+      setCourses(res.data);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load purchased courses");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        setCourses(data);
-        setLoading(false);
-      } catch (err) {
-        console.error(err);
-        setError("Failed to load purchased courses");
-        setLoading(false);
-      }
-    };
+  fetchCourses();
+}, [user]);
 
-    fetchCourses();
-  }, []);
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-white to-gray-100 px-6 pt-10 text-gray-900">

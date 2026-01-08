@@ -63,7 +63,6 @@ const AddCourse = () => {
       );
 
       alert("Course Created Successfully!");
-      console.log(res.data);
 
       setCourse({
         title: "",

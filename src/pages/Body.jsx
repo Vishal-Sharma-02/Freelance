@@ -1,41 +1,45 @@
-import React ,{useEffect} from 'react'
-import { Outlet} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Outlet } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import axios from 'axios';
-import { BASE_URL } from '../utils/constants';
 import { useDispatch } from 'react-redux';
 import { addUser, removeUser } from '../utils/userSlice';
+import api from '../utils/axiosInstance';
 
 const Body = () => {
   const dispatch = useDispatch();
+  const [checkingSession, setCheckingSession] = useState(true);
 
   useEffect(() => {
-  async function verifySession() {
-    try {
-      const res = await axios.get(BASE_URL + "/profile/view", {
-        withCredentials: true,
-      });
-
-      dispatch(addUser(res.data));  // refresh redux
-    } catch {
-      dispatch(removeUser());
+    async function verifySession() {
+      try {
+        const res = await api.get("/profile/view");
+        dispatch(addUser(res.data));
+      } catch (err) {
+        // ✅ Session invalid → clear redux user
+        dispatch(removeUser());
+      } finally {
+        setCheckingSession(false);
+      }
     }
-  }
 
-  verifySession();
-}, []);
+    verifySession();
+  }, [dispatch]);
+
+  // ⛔ Prevent render until session check completes
+  if (checkingSession) {
+    return null; // or loader
+  }
 
   return (
     <div>
-  
-      <Navbar type={"true"} />
-      <div className='pt-20'>
-      <Outlet />
+      <Navbar type="true" />
+      <div className="pt-20">
+        <Outlet />
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
-}
+};
 
 export default Body;

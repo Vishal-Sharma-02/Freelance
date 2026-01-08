@@ -1,12 +1,15 @@
-import axios from "axios";
 import React, { useState , useEffect} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../../utils/userSlice.jsx";
-import { BASE_URL } from "../../utils/constants.jsx";
 import useRazorpayPayment from "../../hooks/useRazorpayPayment";
 import { persistor } from "../../utils/appStore";
 import { useSelector } from "react-redux";
+import api from "../../utils/axiosInstance";
+import { loadRazorpay } from "../../utils/loadRazorpay";
+import { startPremiumPayment } from "../../services/paymentService";
+
+
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -19,6 +22,10 @@ const SignUp = () => {
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const togglePassword = () => setShowPass(!showPass);
+  const [registeredUser, setRegisteredUser] = useState(null);
+  const [razorpayReady, setRazorpayReady] = useState(false);
+  const [showSignupPopup, setShowSignupPopup] = useState(false);
+
 
   const indianStatesAndUTs = [
     "Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat",
@@ -31,13 +38,20 @@ const SignUp = () => {
 
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [acceptPrivacy, setAcceptPrivacy] = useState(false);
+const [orderData, setOrderData] = useState(null);
+const passwordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
+useEffect(() => {
+  if (showSignupPopup) {
+    const load = async () => {
+      const loaded = await loadRazorpay();
+      setRazorpayReady(loaded);
+    };
+    load();
+  }
+}, [showSignupPopup]);
 
-  useEffect(() => {
-      if (userExist) {
-        navigate("/profile");  // Already logged in → redirect
-      }
-    }, []);
 
   const [form, setForm] = useState({
     fullName: "",
@@ -58,53 +72,53 @@ const SignUp = () => {
     e.preventDefault();
     setErrorMsg("");
 
-    if (form.emailId !== form.confirmEmail) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.emailId) || form.emailId !== form.confirmEmail) {
       return setErrorMsg("Email and Confirm Email do not match.");
     }
+
+
+if (!passwordRegex.test(form.password)) {
+  return setErrorMsg(
+    "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character."
+  );
+}
     if (form.password !== form.confirmPassword) {
       return setErrorMsg("Password and Confirm Password do not match.");
+    }
+    if (form.mobile.length !== 10 || !/^\d{10}$/.test(form.mobile)) {
+      return setErrorMsg("Check Mobile number");
     }
     if (!acceptTerms || !acceptPrivacy) {
       return setErrorMsg("You must accept Terms & Conditions and Privacy Policy.");
     }
 
-    try {
-      setLoading(true);
+  try {
+    setLoading(true);
 
-      await axios.post(`${BASE_URL}/auth/register`, form, {
-        withCredentials: true,
-      });
+    const res = await api.post("/auth/register", form);
 
-      const resUser = await axios.get(`${BASE_URL}/profile/view`, {
-        withCredentials: true,
-      });
-
-      const freshUser = resUser.data;
-
-      if (!freshUser || !freshUser.emailId) {
-        return setErrorMsg("Signup successful, but profile data could not be loaded.");
-      }
-
-      dispatch(addUser(freshUser));
-      setUser(freshUser);
-
-      await persistor.flush();
-
-      startPayment(
-        freshUser,
-        () => navigate("/payment-status?success=true"),
-        () => navigate("/payment-status?success=false")
-      );
-
-    } catch (err) {
-      const message =
-        err.response?.data?.message || "Something went wrong during signup.";
-      setErrorMsg(message);
-      console.error(err);
-    } finally {
-      setLoading(false);
+    if (res.data.token) {
+      localStorage.setItem("token", res.data.token);
     }
-  };
+
+    dispatch(addUser(res.data.user));
+    await persistor.flush();
+    setRegisteredUser(res.data.user);
+
+    // 🔐 create order AFTER signup
+    const orderRes = await api.post("/payment/create");
+
+    setOrderData(orderRes.data);
+    setShowSignupPopup(true);
+  } catch (err) {
+    const message =
+      err.response?.data?.message || "Something failed.";
+    setErrorMsg(message);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
   <div className="min-h-screen bg-gradient-to-br from-purple-200 via-purple-100 to-white flex justify-center items-start py-16 px-4">
@@ -252,15 +266,50 @@ const SignUp = () => {
         </p>
       )}
 
-        {/* SUBMIT BUTTON */}
+        {/* SUBMIT / PAYMENT BUTTON */}
         <button
-          disabled={loading}
-          className="w-full bg-gradient-to-r from-purple-600 to-purple-800 text-white py-3 rounded-full font-bold text-lg shadow-lg hover:opacity-90 transition disabled:bg-gray-400"
-        >
-          {loading ? "Please wait..." : "Sign Up →"}
-        </button>
+    type="submit"
+    disabled={loading}
+    className="w-full bg-gradient-to-r from-purple-600 to-purple-800 text-white py-3 rounded-full font-bold text-lg shadow-lg hover:opacity-90 transition disabled:bg-gray-400"
+  >
+    {loading ? "Please wait..." : "Sign Up →"}
+  </button>
 
       </form>
+
+{showSignupPopup && (
+  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div className="bg-white rounded-2xl p-8 max-w-md w-full text-center shadow-2xl">
+
+      <h2 className="text-2xl font-bold text-green-600">
+        🎉 Signup Successful!
+      </h2>
+
+      <p className="text-gray-600 mt-3">
+        Your account has been created successfully.
+        Proceed to payment to unlock premium access.
+      </p>
+
+      <button
+  onClick={() =>
+    startPremiumPayment({
+      user: registeredUser,
+      onSuccess: () => navigate("/payment-status?success=true"),
+      onFail: () => navigate("/payment-status?success=false"),
+      onAlreadySubscribed: () => navigate("/course"),
+    })
+  }
+  className="w-full bg-blue-600 text-white py-3 rounded-full font-bold rounded-full"
+>
+  Continue to Payment →
+</button>
+
+
+    </div>
+  </div>
+)}
+
+
 
       {/* LOGIN LINK */}
       <p className="mt-6 text-center text-gray-700">

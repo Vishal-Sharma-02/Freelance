@@ -3,33 +3,37 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants.jsx";
 import { useSelector } from "react-redux";
-import useRazorpayPayment  from "../hooks/useRazorpayPayment.js";
+// import useRazorpayPayment  from "../hooks/useRazorpayPayment.js";
+import api from "../utils/axiosInstance";
+import { loadRazorpay } from "../utils/loadRazorpay";
+import { startPremiumPayment } from "../services/paymentService";
 
-const CourseDetail = () => {
+const CourseDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const user = useSelector((state) => state.user);
-  console.log("user1 :", user);
 
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isUserSubscribed, setIsUserSubscribed] = useState(false);
-  const startPayment = useRazorpayPayment();  
+  // const startPayment = useRazorpayPayment();  
 
   // -------------------------------------------------------
   // VERIFY SUBSCRIPTION
   // -------------------------------------------------------
   const verifyUserSubscription = async () => {
   try {
-    const res = await axios.get(`${BASE_URL}/premium/verify`, {
-      withCredentials: true,
-    });
+    const res = await api.get("/premium/verify");
     setIsUserSubscribed(res.data.isSubscribed);
   } catch {
     setIsUserSubscribed(false);
   }
 };
+
+ useEffect(() => {
+    loadRazorpay(); // preload Razorpay script
+  }, []);
 
   // -------------------------------------------------------
   // FETCH COURSE DATA
@@ -55,40 +59,33 @@ const CourseDetail = () => {
   // -------------------------------------------------------
   // BUY BUTTON CLICK
   // -------------------------------------------------------
- const handleBuy = async () => {
-  try {
-    // 🔥 1. Verify backend session ― avoid trusting Redux only
-    const res = await axios.get(`${BASE_URL}/profile/view`, {
-      withCredentials: true,
-    });
+//  const handleBuy = async () => {
+//   try {
 
-    const verifiedUser = res.data;
+//     const sub = await api.get("/premium/verify");
+//     if (sub.data.isSubscribed) {
+//       navigate("/courses");
+//       return;
+//     }
 
-    // If no user → redirect
-    if (!verifiedUser) {
-      navigate("/signup");
-      return;
-    }
 
-    const sub = await axios.get(`${BASE_URL}/premium/verify`, {
-        withCredentials: true,
-      });
-      if (sub.data.isSubscribed) {
-        return navigate(`/learn/${course._id}`);
-    }
+//     // Create order BEFORE opening Razorpay
+//     const res = await api.post("/payment/create");
 
-    // 🔥 2. Start payment using fresh user
-    startPayment(
-      verifiedUser,
-      () => navigate("/payment-status?success=true"),
-      () => navigate("/payment-status?success=false")
-    );
+//     // Open Razorpay immediately
+//     startPayment(
+//       res.data,
+//       user,
+//       () => navigate("/payment-status?success=true"),
+//       () => navigate("/payment-status?success=false")
+//     );
 
-  } catch (err) {
-    // Backend says user not logged in
-    navigate("/signup");
-  }
-};
+//   } catch (err) {
+//     console.error(err);
+//     navigate("/signup");
+//   }
+// };
+
 
   // -------------------------------------------------------
   // LOADING STATES
@@ -156,11 +153,29 @@ const CourseDetail = () => {
           <div className="mt-5">
             {!isUserSubscribed ? (
               <button
-                onClick={handleBuy}
-                className="px-6 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition"
-              >
-                Buy Now
-              </button>
+  onClick={() =>
+    startPremiumPayment({
+      user,
+      onSuccess: () => navigate(`/learn/${course._id}`),
+      onAlreadySubscribed: () => navigate(`/learn/${course._id}`),
+    })
+  }
+
+  className="
+    w-full sm:w-auto
+    px-8 py-3
+    bg-gradient-to-r from-blue-600 to-blue-800
+    text-white text-lg font-semibold
+    rounded-full
+    shadow-lg
+    hover:from-blue-700 hover:to-blue-900
+    active:scale-95
+    transition
+    duration-200
+  "
+>
+  Buy Now
+</button>
             ) : (
               <Link
                 to={`/learn/${course._id}`}
@@ -171,7 +186,7 @@ const CourseDetail = () => {
             )}
           </div>
 
-          {/* MODULES */}
+          {/* MODULES
           <h2 className="text-xl font-bold mt-8 mb-4">Course Content</h2>
 
           {course?.modules?.map((mod, i) => (
@@ -193,12 +208,12 @@ const CourseDetail = () => {
 
               <hr className="mt-4 opacity-30" />
             </div>
-          ))}
+          ))} */}
         </div>
 
       </div>
     </div>
   );
-}; 
+};
 
-export default CourseDetail;
+export default CourseDetails;

@@ -4,13 +4,14 @@ import axios from "axios";
 import { BASE_URL } from "../utils/constants.jsx";
 import { useSelector } from "react-redux";
 import useRazorpayPayment  from "../hooks/useRazorpayPayment.js";
+import api from "../utils/axiosInstance";
 
 const CourseDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const user = useSelector((state) => state.user);
-  console.log("user1 :", user);
+
 
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -22,9 +23,7 @@ const CourseDetails = () => {
   // -------------------------------------------------------
   const verifyUserSubscription = async () => {
   try {
-    const res = await axios.get(`${BASE_URL}/premium/verify`, {
-      withCredentials: true,
-    });
+    const res = await api.get("/premium/verify");
     setIsUserSubscribed(res.data.isSubscribed);
   } catch {
     setIsUserSubscribed(false);
@@ -58,11 +57,8 @@ const CourseDetails = () => {
  const handleBuy = async () => {
   try {
     // 🔥 1. Verify backend session ― avoid trusting Redux only
-    const res = await axios.get(`${BASE_URL}/profile/view`, {
-      withCredentials: true,
-    });
-
-    const verifiedUser = res.data;
+    const res = await api.get("/profile/view");
+const verifiedUser = res.data;
 
     // If no user → redirect
     if (!verifiedUser) {
@@ -70,9 +66,7 @@ const CourseDetails = () => {
       return;
     }
 
-    const sub = await axios.get(`${BASE_URL}/premium/verify`, {
-        withCredentials: true,
-      });
+    const sub = await api.get("/premium/verify");
       if (sub.data.isSubscribed) {
         return navigate(`/learn/${course._id}`);
     }
@@ -171,7 +165,7 @@ const CourseDetails = () => {
             )}
           </div>
 
-          {/* MODULES */}
+          {/* MODULES
           <h2 className="text-xl font-bold mt-8 mb-4">Course Content</h2>
 
           {course?.modules?.map((mod, i) => (
@@ -193,7 +187,7 @@ const CourseDetails = () => {
 
               <hr className="mt-4 opacity-30" />
             </div>
-          ))}
+          ))} */}
         </div>
 
       </div>

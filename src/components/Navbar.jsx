@@ -7,9 +7,7 @@ const Navbar = ({ type }) => {
  
    // ⭐ CHECK LOGIN FROM REDUX STORE (PERSISTED)
   const user = useSelector((state) => state.user);
-  const isLoggedIn = Boolean(user && user._id);
-  console.log(user);
-    
+  const isLoggedIn = Boolean(user && user._id);    
 
   return (
     <div className="w-full fixed top-0 left-0 z-50">

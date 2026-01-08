@@ -25,7 +25,7 @@ const Webinar = () => {
 
     try {
 
-      if(!user){
+      if(!user || !user.emailId){
         navigate("/login");
         return
       }

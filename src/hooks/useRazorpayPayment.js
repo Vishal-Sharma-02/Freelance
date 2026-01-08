@@ -1,54 +1,40 @@
-// useRazorpayPayment.js
-import axios from "axios";
-import { BASE_URL } from "../utils/constants";
-
 const useRazorpayPayment = () => {
-  return async function startPayment(user, onSuccess, onFail) {
-    if (!user) {
-      console.log("User not logged in");
+  return function startPayment(orderData, user, onSuccess, onFail) {
+    if (!window.Razorpay) {
+      alert("Payment system still loading. Please try again.");
       return;
     }
+    if (!orderData || !user) return;
 
-    try {
-      const res = await axios.post(
-        BASE_URL + "/payment/create",
-        {},
-        { withCredentials: true }
-      );
+    const options = {
+      key: orderData.keyId,
+      amount: orderData.amount,
+      currency: orderData.currency,
+      order_id: orderData.orderId,
 
-      const { orderId, amount, currency, keyId } = res.data;
+      name: "Anaylixhub",
+      description: "Premium Subscription",
 
-      const options = {
-        key: keyId,
-        amount,
-        currency,
-        name: "Anaylixhub",
-        description: "Premium Subscription",
-        order_id: orderId,
+      prefill: {
+        name: user.fullName,
+        email: user.emailId,
+        contact: user.mobile,
+      },
 
-        prefill: {
-          name: user.fullName,
-          email: user.emailId,
-          contact: user.mobile,
+      handler: function () {
+        onSuccess();
+      },
+
+      modal: {
+        ondismiss: function () {
+          onFail();
         },
+      },
+    };
 
-        handler: (response) => {
-          onSuccess();
-        },
-
-        modal: {
-          ondismiss: onFail,
-        },
-      };
-
-      const rzp = new window.Razorpay(options);
-      rzp.on("payment.failed", onFail);
-      rzp.open();
-
-    } catch (err) {
-      console.log("Payment Error:", err);
-      onFail();
-    }
+    // 🚀 MUST be synchronous
+    const rzp = new window.Razorpay(options);
+    rzp.open();
   };
 };
 

@@ -1,25 +1,42 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import axios from "axios";
+import React, { useEffect, useState , useRef} from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { PlayCircle } from "lucide-react";
-import { BASE_URL } from "../utils/constants.jsx";
+import api from "../utils/axiosInstance";
 
 const Learning = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [course, setCourse] = useState(null);
   const [currentVideo, setCurrentVideo] = useState(null);
+  const videoRef = useRef(null);
 
   useEffect(() => {
-    const fetch = async () => {
-      const res = await axios.get(`${BASE_URL}/course/${id}`);
-      setCourse(res.data);
+    const fetchCourse = async () => {
+      try {
+        const res = await api.get(`/course/${id}`);
+        setCourse(res.data);
 
-      const first = res.data.modules[0]?.lectures[0];
-      if (first) setCurrentVideo(first);
+        const first = res.data.modules?.[0]?.lectures?.[0];
+        if (first) setCurrentVideo(first);
+      } catch (err) {
+        console.error(err);
+        // Unauthorized → redirect
+        navigate("/login");
+      }
     };
 
-    fetch();
-  }, [id]);
+    fetchCourse();
+  }, [id, navigate]);
+
+  useEffect(() => {
+  if (videoRef.current && currentVideo) {
+    videoRef.current.load();   // reload new source
+    videoRef.current.play().catch(() => {
+      // iOS may block if not considered user gesture
+    });
+  }
+}, [currentVideo]);
+
 
 // FULL PAGE LOADING SCREEN
 if (!course) {
@@ -58,6 +75,7 @@ if (!course) {
             {/* Responsive Video */}
             <div className="w-full h-[220px] sm:h-[300px] md:h-[460px] bg-black rounded-xl overflow-hidden flex items-center justify-center">
               <video
+               ref={videoRef}
                 src={currentVideo?.videoUrl}
                 controls
                 className="w-full h-full object-contain bg-black"

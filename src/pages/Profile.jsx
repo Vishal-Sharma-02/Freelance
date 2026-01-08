@@ -1,56 +1,69 @@
 import React, {useEffect, useState } from "react";
-import axios from "axios";
+
 import { useDispatch } from "react-redux";
-import { BASE_URL } from "../utils/constants";
 import { useNavigate, Link } from "react-router-dom";
 import { removeUser } from "../utils/userSlice";
 import { persistor } from "../utils/appStore";
+import api from "../utils/axiosInstance";
+import { startPremiumPayment } from "../services/paymentService";
+
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const [isSubscribed, setIsSubscribed] = useState(false);
 
   const dispatch = useDispatch();
-
+ 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-          console.log(BASE_URL);
-        const res = await axios.get(BASE_URL + "/profile/view", {
-          withCredentials: true, // 🔥 REQUIRED for JWT cookie
-        });
-            console.log(res);
-        // Your API returns user directly
-        setUser(res.data);
-
-      } catch (err) {
-        console.error(err);
-        alert("Failed to load profile");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProfile();
-  }, []);
-
-  
-  const handleLogout = async () => {
+  const fetchProfile = async () => {
     try {
-      await axios.get(BASE_URL + "/auth/logout", {
-        withCredentials: true
-      });
+      const res = await api.get("/profile/view");
       
-      dispatch(removeUser());      // remove from redux
-      await persistor.purge();     // clear persisted storage
+      const verifyRes = await api.get("/premium/verify");
+
+    if (verifyRes.data.isSubscribed) {
+      // Already paid → skip payment
+      setIsSubscribed(true);
+    }
       
-      navigate("/");               // redirect to home
+      setUser(res.data);
+
     } catch (err) {
       console.error(err);
-      alert("Logout failed. Please try again.");
+      navigate("/login"); // auto redirect if unauthorized
+    } finally {
+      setLoading(false);
     }
   };
+
+  fetchProfile();
+}, [navigate]);
+
+
+const handleLogout = async () => {
+  try {
+    // 1️⃣ Call backend to clear cookie
+    await api.get("/auth/logout");
+  } catch (err) {
+    // Even if backend fails, continue cleanup
+    console.error("Logout API failed:", err);
+  } finally {
+    // 2️⃣ Clear fallback token (VERY IMPORTANT)
+    localStorage.removeItem("token");
+
+    // 3️⃣ Clear redux state
+    dispatch(removeUser());
+
+    // 4️⃣ Clear persisted redux storage
+    await persistor.purge();
+
+    // 5️⃣ Redirect
+    navigate("/login", { replace: true });
+  }
+};
+
   
   if (loading) {
     return (
@@ -94,21 +107,41 @@ const Profile = () => {
               
           </div>
 
-          {/* BUTTONS */}
           <div className="mt-8 flex gap-4">
-             <Link to={"/course"}
-    className="px-6 py-3 bg-indigo-600 text-white rounded-full font-semibold hover:bg-indigo-700 transition"
-  >
-    My Courses
-  </Link>
 
-            <button
-              className="px-6 py-3 bg-red-500 text-white rounded-full font-semibold hover:bg-red-600 transition"
-              onClick={handleLogout}
-            >
-              Logout
-            </button>
-          </div>
+  <div className="mt-8 flex gap-4">
+  {isSubscribed ? (
+    <Link
+      to="/course"
+      className="px-6 py-3 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition"
+    >
+      My Courses
+    </Link>
+  ) : (
+    <button
+      onClick={() =>
+        startPremiumPayment({
+          user,
+          onSuccess: () => navigate("/course"),
+          onAlreadySubscribed: () => navigate("/course"),
+        })
+      }
+      className="px-6 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition"
+    >
+      Buy Course
+    </button>
+  )}
+
+  <button
+    onClick={handleLogout}
+    className="px-6 py-3 bg-red-500 text-white rounded-full font-semibold hover:bg-red-600 transition"
+  >
+    Logout
+  </button>
+</div>
+
+
+</div>
 
         </div>
       </div>

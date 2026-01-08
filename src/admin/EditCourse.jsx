@@ -99,7 +99,6 @@ const EditCourse = () => {
       );
 
       alert("Course updated successfully!");
-      console.log(res.data);
 
       navigate(`/course/${course._id}`);
     } catch (err) {

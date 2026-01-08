@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CourseCard from "../components/CourseCard";
 import { BASE_URL } from "../utils/constants.jsx";
+import axios from "axios";
 
 const Courses = () => {
   const [courses, setCourses] = useState([]);
@@ -9,23 +10,22 @@ const Courses = () => {
 
   const API_URL = BASE_URL + "/course/all";
 
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const response = await fetch(API_URL);
-        const data = await response.json();
+ useEffect(() => {
+  const fetchCourses = async () => {
+    try {
+      const response = await axios.get(API_URL);
+      setCourses(response.data);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load courses");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        setCourses(data);
-        setLoading(false);
-      } catch (err) {
-        console.error(err);
-        setError("Failed to load courses");
-        setLoading(false);
-      }
-    };
+  fetchCourses();
+}, []);
 
-    fetchCourses();
-  }, []);
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-white to-gray-100 px-6 pt-10 text-gray-900">
