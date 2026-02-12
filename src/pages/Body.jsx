@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -7,29 +7,33 @@ import { addUser, removeUser } from '../utils/userSlice';
 import api from '../utils/axiosInstance';
 
 const Body = () => {
-  const dispatch = useDispatch();
-  const [checkingSession, setCheckingSession] = useState(true);
+  // const dispatch = useDispatch();
+  // const [checkingSession, setCheckingSession] = useState(true);
 
-  useEffect(() => {
-    async function verifySession() {
-      try {
-        const res = await api.get("/profile/view");
-        dispatch(addUser(res.data));
-      } catch (err) {
-        // ✅ Session invalid → clear redux user
-        dispatch(removeUser());
-      } finally {
-        setCheckingSession(false);
-      }
-    }
+  // // 👇 Prevent double execution in StrictMode
+  // const hasChecked = useRef(false);
 
-    verifySession();
-  }, [dispatch]);
+  // useEffect(() => {
+  //   if (hasChecked.current) return;
+  //   hasChecked.current = true;
 
-  // ⛔ Prevent render until session check completes
-  if (checkingSession) {
-    return null; // or loader
-  }
+  //   async function verifySession() {
+  //     try {
+  //       const res = await api.get("/profile/view");
+  //       dispatch(addUser(res.data));
+  //     } catch {
+  //       dispatch(removeUser());
+  //     } finally {
+  //       setCheckingSession(false);
+  //     }
+  //   }
+
+  //   verifySession();
+  // }, [dispatch]);
+
+  // if (checkingSession) {
+  //   return null; // or loader
+  // }
 
   return (
     <div>

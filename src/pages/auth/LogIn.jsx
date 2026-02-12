@@ -19,7 +19,7 @@ const LogIn = () => {
   const togglePassword = () => setShowPass(!showPass);
 
   useEffect(() => {
-    if (user && user.emailId) {
+    if (user?.emailId) {
       navigate("/profile");  // Already logged in → redirect
     }
   }, [user]);

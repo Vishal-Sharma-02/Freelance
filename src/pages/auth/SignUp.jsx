@@ -2,9 +2,9 @@ import React, { useState , useEffect} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../../utils/userSlice.jsx";
-import useRazorpayPayment from "../../hooks/useRazorpayPayment";
+// import useRazorpayPayment from "../../hooks/useRazorpayPayment";
 import { persistor } from "../../utils/appStore";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import api from "../../utils/axiosInstance";
 import { loadRazorpay } from "../../utils/loadRazorpay";
 import { startPremiumPayment } from "../../services/paymentService";
@@ -14,10 +14,8 @@ import { startPremiumPayment } from "../../services/paymentService";
 const SignUp = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const startPayment = useRazorpayPayment();
-  const userExist = useSelector((state) => state.user);
+  // const startPayment = useRazorpayPayment();
 
-  const [user, setUser] = useState(null);
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);

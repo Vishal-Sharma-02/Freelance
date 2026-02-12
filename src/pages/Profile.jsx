@@ -19,16 +19,18 @@ const Profile = () => {
   useEffect(() => {
   const fetchProfile = async () => {
     try {
-      const res = await api.get("/profile/view");
-      
-      const verifyRes = await api.get("/premium/verify");
+      const [profileRes, verifyRes] = await Promise.all([
+  api.get("/profile/view"),
+  api.get("/premium/verify"),
+]);
+
 
     if (verifyRes.data.isSubscribed) {
       // Already paid → skip payment
       setIsSubscribed(true);
     }
       
-      setUser(res.data);
+      setUser(profileRes.data);
 
     } catch (err) {
       console.error(err);

@@ -1,47 +1,41 @@
 import React, { useEffect, useState } from "react";
 import CourseCard from "../components/CourseCard";
-import { BASE_URL } from "../utils/constants.jsx";
-import axios from "axios";
+import api from "../utils/axiosInstance";
 
 const Courses = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const API_URL = BASE_URL + "/course/all";
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await api.get("/course/all");
+        setCourses(response.data);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load courses");
+      } finally {
+        setLoading(false);
+      }
+    };
 
- useEffect(() => {
-  const fetchCourses = async () => {
-    try {
-      const response = await axios.get(API_URL);
-      setCourses(response.data);
-    } catch (err) {
-      console.error(err);
-      setError("Failed to load courses");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  fetchCourses();
-}, []);
-
+    fetchCourses();
+  }, []);
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-white to-gray-100 px-6 pt-10 text-gray-900">
 
       {/* HEADER */}
       <div className="max-w-7xl mx-auto flex justify-between items-center mb-16">
-
-        {/* TEXT */}
         <div className="text-center mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold">All Courses</h1>
           <p className="text-gray-600 mt-4 text-lg max-w-2xl mx-auto">
             Explore our expertly crafted courses designed to help you grow and excel.
           </p>
         </div>
-        
       </div>
+
       {/* LOADING */}
       {loading && (
         <p className="text-center text-lg text-gray-500">Loading courses...</p>

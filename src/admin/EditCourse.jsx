@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL } from "../utils/constants.jsx";
+import api from "../utils/axiosInstance";
+
 
 const EditCourse = () => {
   const { id } = useParams();
@@ -16,7 +16,7 @@ const EditCourse = () => {
     const fetchCourse = async () => {
       try {
         
-        const res = await axios.get(`${BASE_URL}/course/${id}`);
+        const res = await api.get(`/course/${id}`);
         
         setCourse(res.data);
         setLoading(false);
@@ -92,11 +92,7 @@ const EditCourse = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.put(
-        `${BASE_URL}/course/update/${course._id}`,
-        course,
-        { headers: { "Content-Type": "application/json" } }
-      );
+     await api.put(`/course/update/${course._id}`, course);
 
       alert("Course updated successfully!");
 

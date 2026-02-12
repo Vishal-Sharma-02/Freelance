@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL } from "../utils/constants.jsx";
 import { useSelector } from "react-redux";
-// import useRazorpayPayment  from "../hooks/useRazorpayPayment.js";
 import api from "../utils/axiosInstance";
 import { loadRazorpay } from "../utils/loadRazorpay";
 import { startPremiumPayment } from "../services/paymentService";
@@ -17,22 +14,22 @@ const CourseDetails = () => {
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isUserSubscribed, setIsUserSubscribed] = useState(false);
-  // const startPayment = useRazorpayPayment();  
 
   // -------------------------------------------------------
   // VERIFY SUBSCRIPTION
   // -------------------------------------------------------
   const verifyUserSubscription = async () => {
-  try {
-    const res = await api.get("/premium/verify");
-    setIsUserSubscribed(res.data.isSubscribed);
-  } catch {
-    setIsUserSubscribed(false);
-  }
-};
+    try {
+      const res = await api.get("/premium/verify");
+      setIsUserSubscribed(res.data.isSubscribed);
+    } catch {
+      setIsUserSubscribed(false);
+    }
+  };
 
- useEffect(() => {
-    loadRazorpay(); // preload Razorpay script
+  // Preload Razorpay (better UX)
+  useEffect(() => {
+    loadRazorpay();
   }, []);
 
   // -------------------------------------------------------
@@ -41,65 +38,36 @@ const CourseDetails = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/course/${id}`);
+        const res = await api.get(`/course/${id}`);
         setCourse(res.data);
 
-        if (user) await verifyUserSubscription();
+        // Always verify (backend will reject if not logged in)
+        await verifyUserSubscription();
 
-        setLoading(false);
       } catch (err) {
         console.log(err);
+      } finally {
         setLoading(false);
       }
     };
 
     fetchCourse();
-  }, [id, user]);
-
-  // -------------------------------------------------------
-  // BUY BUTTON CLICK
-  // -------------------------------------------------------
-//  const handleBuy = async () => {
-//   try {
-
-//     const sub = await api.get("/premium/verify");
-//     if (sub.data.isSubscribed) {
-//       navigate("/courses");
-//       return;
-//     }
-
-
-//     // Create order BEFORE opening Razorpay
-//     const res = await api.post("/payment/create");
-
-//     // Open Razorpay immediately
-//     startPayment(
-//       res.data,
-//       user,
-//       () => navigate("/payment-status?success=true"),
-//       () => navigate("/payment-status?success=false")
-//     );
-
-//   } catch (err) {
-//     console.error(err);
-//     navigate("/signup");
-//   }
-// };
-
+  }, [id]);
 
   // -------------------------------------------------------
   // LOADING STATES
   // -------------------------------------------------------
   if (loading) {
-  return (
-    <div className="w-full h-screen flex items-center justify-center bg-white">
-      <div className="flex flex-col items-center gap-3">
-        <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-        <p className="text-gray-700 text-lg font-medium">Loading...</p>
+    return (
+      <div className="w-full h-screen flex items-center justify-center bg-white">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-gray-700 text-lg font-medium">Loading...</p>
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
+
   if (!course) return <p>Course not found.</p>;
 
   // -------------------------------------------------------
@@ -112,29 +80,16 @@ const CourseDetails = () => {
         {/* LEFT SECTION */}
         <div className="lg:col-span-2 space-y-6">
 
-          {/* Trailer */}
-         <div className="w-full rounded-xl overflow-hidden shadow-sm border bg-black 
+          {/* Trailer / Thumbnail */}
+          <div className="w-full rounded-xl overflow-hidden shadow-sm border bg-black 
                 h-[220px] sm:h-[280px] md:h-[340px] lg:h-[380px] xl:h-[420px] 
                 flex items-center justify-center">
-
-  {/* {course.trailerVideo ? (
-    <video
-      src={course.trailerVideo}
-      autoPlay
-      muted
-      playsInline
-      controls
-      className="w-full h-full object-contain bg-black"
-    />
-  ) : ( */}
-    <img
-      src={course.thumbnail}
-      alt={course.title}
-      className="w-full h-full object-contain bg-black"
-    />
-  {/* )} */}
-
-</div>
+            <img
+              src={course.thumbnail}
+              alt={course.title}
+              className="w-full h-full object-contain bg-black"
+            />
+          </div>
 
           {/* Description */}
           <div className="bg-white rounded-xl p-6 shadow-sm border">
@@ -153,29 +108,29 @@ const CourseDetails = () => {
           <div className="mt-5">
             {!isUserSubscribed ? (
               <button
-  onClick={() =>
-    startPremiumPayment({
-      user,
-      onSuccess: () => navigate(`/learn/${course._id}`),
-      onAlreadySubscribed: () => navigate(`/learn/${course._id}`),
-    })
-  }
-
-  className="
-    w-full sm:w-auto
-    px-8 py-3
-    bg-gradient-to-r from-blue-600 to-blue-800
-    text-white text-lg font-semibold
-    rounded-full
-    shadow-lg
-    hover:from-blue-700 hover:to-blue-900
-    active:scale-95
-    transition
-    duration-200
-  "
->
-  Buy Now
-</button>
+                onClick={() =>
+                  startPremiumPayment({
+                    user,
+                    onSuccess: () => navigate(`/learn/${course._id}`),
+                    onAlreadySubscribed: () =>
+                      navigate(`/learn/${course._id}`),
+                  })
+                }
+                className="
+                  w-full sm:w-auto
+                  px-8 py-3
+                  bg-gradient-to-r from-blue-600 to-blue-800
+                  text-white text-lg font-semibold
+                  rounded-full
+                  shadow-lg
+                  hover:from-blue-700 hover:to-blue-900
+                  active:scale-95
+                  transition
+                  duration-200
+                "
+              >
+                Buy Now
+              </button>
             ) : (
               <Link
                 to={`/learn/${course._id}`}
@@ -186,31 +141,7 @@ const CourseDetails = () => {
             )}
           </div>
 
-          {/* MODULES
-          <h2 className="text-xl font-bold mt-8 mb-4">Course Content</h2>
-
-          {course?.modules?.map((mod, i) => (
-            <div key={i} className="mb-6">
-              <h3 className="font-semibold text-lg mb-2">
-                {i + 1}. {mod.moduleTitle}
-              </h3>
-
-              <ul className="space-y-2">
-                {mod.lectures.map((lec, j) => (
-                  <li
-                    key={j}
-                    className="p-3 bg-gray-100 border border-gray-200 rounded-lg hover:bg-gray-200 transition"
-                  >
-                    {j + 1}. {lec.title} • {lec.duration}
-                  </li>
-                ))}
-              </ul>
-
-              <hr className="mt-4 opacity-30" />
-            </div>
-          ))} */}
         </div>
-
       </div>
     </div>
   );

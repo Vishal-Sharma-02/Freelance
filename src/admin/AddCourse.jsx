@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { BASE_URL } from "../utils/constants.jsx";
+import api from "../utils/axiosInstance";
 
 const AddCourse = () => {
   const [course, setCourse] = useState({
@@ -53,34 +52,31 @@ const AddCourse = () => {
 
   // Submit Course
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      const res = await axios.post(
-        `${BASE_URL}/course/create`,
-        course,
-        { headers: { "Content-Type": "application/json" } }
-      );
+  try {
+    await api.post("/course/create", course);
 
-      alert("Course Created Successfully!");
+    alert("Course Created Successfully!");
 
-      setCourse({
-        title: "",
-        shortDescription: "",
-        fullDescription: "",
-        category: "",
-        thumbnail: "",
-        trailerVideo: "",
-        trailerThumbnail: "",
-        price: "",
-        duration: "",
-        modules: []
-      });
-    } catch (err) {
-      alert("Error Creating Course");
-      console.error(err);
-    }
-  };
+    setCourse({
+      title: "",
+      shortDescription: "",
+      fullDescription: "",
+      category: "",
+      thumbnail: "",
+      trailerVideo: "",
+      trailerThumbnail: "",
+      price: "",
+      duration: "",
+      modules: []
+    });
+  } catch (err) {
+    alert("Error Creating Course");
+    console.error(err);
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-gray-100 p-10">
