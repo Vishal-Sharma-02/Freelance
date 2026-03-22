@@ -30,7 +30,7 @@ const Navbar = ({ type }) => {
                            text-white font-semibold px-7 py-3 rounded-full 
                            shadow-lg hover:scale-105 transition"
                 >
-                  PURCHASE NOW
+                  ENROLL NOW
                 </Link>
         
             </div>

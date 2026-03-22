@@ -46,10 +46,9 @@ const Footer = ()=>{
           <h3 className="text-xl font-semibold mb-3">Our Courses</h3>
           <div className="w-10 h-1 bg-yellow-500 mb-4" />
           <ul className="space-y-2 text-gray-300">
-            <li>» Video Editing</li>
-            <li>» Graphic Design</li>
+            <li>» Digital Product Course</li>
             <li>» Script Writing</li>
-            <li>» Social media Management</li>
+           
           </ul>
         </div>
 

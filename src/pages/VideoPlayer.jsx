@@ -8,7 +8,7 @@ const VideoPlayer = () => {
   useEffect(() => {
     const video = videoRef.current;
     const url =
-      "https://vz-abea7b3f-f97.b-cdn.net/71c440ae-a3d3-4a8b-aa05-f2de228fcb22/playlist.m3u8";
+      "https://vz-abea7b3f-f97.b-cdn.net/8a7e4684-9923-4fd3-8888-7a2e62561897/playlist.m3u8";
 
     video.muted = true;
     video.playsInline = true;

@@ -6,22 +6,17 @@ import FAQs from "./FAQs";
 const Home = () => {
   return (
     <div className="md:-mt-20">
-
       {/* MAIN WRAPPER */}
       <div className="min-h-screen w-full bg-gradient-to-b from-white via-[#f8f6ff] to-[#eef2ff] overflow-x-hidden">
-
         {/* HERO SECTION */}
         <section className="relative w-full min-h-screen flex items-center pb-5">
-
           {/* Background glow */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,210,70,0.35),transparent_60%)]"></div>
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(60,90,255,0.25),transparent_70%)]"></div>
 
           <div className="relative max-w-7xl mx-auto w-full px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-
             {/* LEFT TEXT */}
             <div className="space-y-6">
-
               <h1 className="text-4xl md:text-6xl font-extrabold leading-tight text-gray-900">
                 Never Stop{" "}
                 <span className="bg-yellow-500 text-white px-4 py-1 rounded-md shadow-md">
@@ -32,8 +27,8 @@ const Home = () => {
               </h1>
 
               <p className="text-gray-600 text-lg max-w-md">
-                Every teaching and learning journey is unique.  
-                Following along, we’ll help guide your way.
+                Every teaching and learning journey is unique. Following along,
+                we’ll help guide your way.
               </p>
 
               {/* CTA BUTTON */}
@@ -43,12 +38,10 @@ const Home = () => {
               >
                 Enroll Now →
               </Link>
-
             </div>
 
             {/* RIGHT: BOOK GLASS CARD */}
             <div className="flex justify-center md:justify-end">
-
               <div
                 className="
                   relative
@@ -69,21 +62,19 @@ const Home = () => {
 
                 {/* Book Image */}
                 <img
-                  src="https://res.cloudinary.com/dhulhgd5y/image/upload/v1765559052/book_fagnv3.png"
+                  src="https://res.cloudinary.com/dhulhgd5y/image/upload/v1769057276/WhatsApp_Image_2026-01-22_at_09.46.55_ama06v.jpg"
                   alt="Mastery Pack"
                   className="relative w-[80%] object-contain drop-shadow-[0_0_25px_rgba(255,170,50,0.45)]"
                 />
               </div>
-
             </div>
-
           </div>
         </section>
       </div>
 
       {/* ABOUT SECTION */}
       <AboutUs />
-      <FAQs/>
+      <FAQs />
     </div>
   );
 };

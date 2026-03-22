@@ -20,10 +20,11 @@ const AboutUs = ()=> {
         <div>
           <h2 className="text-3xl font-bold mb-4">Who We Are</h2>
           <p className="text-gray-700 leading-relaxed mb-4">
-            AnaylixHub is a modern learning platform dedicated to Video Editing,
-            Graphic Design, Script Writing, and Social Media Management. We aim
-            to bridge the gap between theoretical learning and real industry
-            expectations.
+            AnaylixHub is a modern learning platform dedicated to Digital
+            Product Creation and Script Writing. We aim to empower learners with
+            practical skills, helping them transform ideas into impactful
+            digital products and compelling scripts that meet real industry
+            standards.
           </p>
           <p className="text-gray-700 leading-relaxed">
             Our mission is simple: make high-quality content for every —
@@ -78,9 +79,10 @@ const AboutUs = ()=> {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           <div className="space-y-4">
             <p className="text-gray-700 leading-relaxed">
-              We don’t just teach — we mentor. Our programs are built for those
-              who want to excel in the fields of Video Editing, Graphic Design,
-              Script Writing, and Social Media Management.
+              We don’t just teach — we mentor. Our programs are designed for
+              individuals who want to excel in Digital Product Creation and
+              Script Writing, turning creative ideas into market-ready products
+              and powerful, audience-driven scripts.
             </p>
             <ul className="list-disc pl-6 text-gray-700 space-y-2">
               <li>Hands-on projects and real datasets</li>
@@ -89,7 +91,6 @@ const AboutUs = ()=> {
               <li>Career guidance and portfolio support</li>
             </ul>
           </div>
-        
         </div>
       </section>
 
@@ -97,9 +98,13 @@ const AboutUs = ()=> {
       <section className="py-20 bg-blue-900 text-white text-center">
         <h2 className="text-3xl font-bold mb-6">Join the Future of Learning</h2>
         <p className="max-w-2xl mx-auto text-lg mb-8">
-          Be part of a thriving community of learners advancing with content related skills. Start your journey with AnaylixHub today.
+          Be part of a thriving community of learners advancing with content
+          related skills. Start your journey with AnaylixHub today.
         </p>
-        <Link to={"/course"} className="px-10 py-3 bg-yellow-400 text-gray-900 rounded-full font-semibold shadow-lg hover:bg-yellow-300 transition">
+        <Link
+          to={"/course"}
+          className="px-10 py-3 bg-yellow-400 text-gray-900 rounded-full font-semibold shadow-lg hover:bg-yellow-300 transition"
+        >
           Explore Courses
         </Link>
       </section>
