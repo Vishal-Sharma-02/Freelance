@@ -11,28 +11,28 @@ const Navbar = ({ type }) => {
 
   return (
     <div className="w-full fixed top-0 left-0 z-50">
-
       {/* ⭐ LANDING NAVBAR */}
       {type === "false" && (
         <div className="backdrop-blur-xl bg-[#0D1125]/80 border-b border-white/10 shadow-lg">
           <div className="max-w-7xl mx-auto  py-2 flex justify-between items-center">
-            
             <Link to="/anaylixpromo" onClick={() => setMobileOpen(false)}>
-              <img src="https://res.cloudinary.com/dhulhgd5y/image/upload/v1765559052/logo2_fjpbok.png" alt="logo" className="h-16 md:h-20 lg:h-20 w-auto drop-shadow-xl" />
+              <img
+                src="https://res.cloudinary.com/dhulhgd5y/image/upload/v1775058921/IMG_4249_hdiprm.png"
+                alt="logo"
+                className="h-16 md:h-20 lg:h-20 w-auto drop-shadow-xl"
+              />
             </Link>
 
             {/* Desktop: Show Purchase OR Profile */}
             <div className="hidden md:block">
-             
-                <Link
-                  to="/signup"
-                  className="bg-gradient-to-r from-purple-500 to-cyan-400
+              <Link
+                to="/signup"
+                className="bg-gradient-to-r from-purple-500 to-cyan-400
                            text-white font-semibold px-7 py-3 rounded-full 
                            shadow-lg hover:scale-105 transition"
-                >
-                  ENROLL NOW
-                </Link>
-        
+              >
+                ENROLL NOW
+              </Link>
             </div>
 
             <button
@@ -46,13 +46,42 @@ const Navbar = ({ type }) => {
           {/* ⭐ MOBILE MENU */}
           {mobileOpen && (
             <div className="md:hidden bg-[#0D1125]/95 text-white px-6 py-6 space-y-6 shadow-lg">
-
               <nav className="flex flex-col space-y-4 text-lg font-medium">
-                <Link to="/" onClick={() => setMobileOpen(false)} className="hover:text-cyan-300 transition">Home</Link>
-                <Link to="/course" onClick={() => setMobileOpen(false)} className="hover:text-cyan-300 transition">Courses</Link>
-                <Link to="/about" onClick={() => setMobileOpen(false)} className="hover:text-cyan-300 transition">About Us</Link>
-                <Link to="/webinar" onClick={() => setMobileOpen(false)} className="hover:text-cyan-300 transition">Webinar</Link>
-                <Link to="/contact" onClick={() => setMobileOpen(false)} className="hover:text-cyan-300 transition">Contact Us</Link>
+                <Link
+                  to="/"
+                  onClick={() => setMobileOpen(false)}
+                  className="hover:text-cyan-300 transition"
+                >
+                  Home
+                </Link>
+                <Link
+                  to="/course"
+                  onClick={() => setMobileOpen(false)}
+                  className="hover:text-cyan-300 transition"
+                >
+                  Courses
+                </Link>
+                <Link
+                  to="/about"
+                  onClick={() => setMobileOpen(false)}
+                  className="hover:text-cyan-300 transition"
+                >
+                  About Us
+                </Link>
+                <Link
+                  to="/webinar"
+                  onClick={() => setMobileOpen(false)}
+                  className="hover:text-cyan-300 transition"
+                >
+                  Webinar
+                </Link>
+                <Link
+                  to="/contact"
+                  onClick={() => setMobileOpen(false)}
+                  className="hover:text-cyan-300 transition"
+                >
+                  Contact Us
+                </Link>
               </nav>
 
               {!isLoggedIn ? (
@@ -82,18 +111,31 @@ const Navbar = ({ type }) => {
       {type === "true" && (
         <div className="backdrop-blur-xl bg-[#0B1320]/80 border-b border-white/10 shadow-lg">
           <div className="max-w-7xl mx-auto pr-4 md:pr-0 py-2 flex justify-between items-center">
-
             <Link to="/" onClick={() => setMobileOpen(false)}>
-              <img src="https://res.cloudinary.com/dhulhgd5y/image/upload/v1765559052/logo2_fjpbok.png" alt="logo" className="h-16 md:h-20 lg:h-20 w-auto drop-shadow-xl" />
+              <img
+                src="https://res.cloudinary.com/dhulhgd5y/image/upload/v1775058921/IMG_4249_hdiprm.png"
+                alt="logo"
+                className="h-16 md:h-20 lg:h-20 w-auto drop-shadow-xl"
+              />
             </Link>
 
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center gap-8 text-base font-medium text-white">
-              <Link to="/" className="hover:text-cyan-300 transition">Home</Link>
-              <Link to="/course" className="hover:text-cyan-300 transition">Courses</Link>
-              <Link to="/about" className="hover:text-cyan-300 transition">About Us</Link>
-              <Link to="/webinar" className="hover:text-cyan-300 transition">Webinar</Link>
-              <Link to="/contact" className="hover:text-cyan-300 transition">Contact Us</Link>
+              <Link to="/" className="hover:text-cyan-300 transition">
+                Home
+              </Link>
+              <Link to="/course" className="hover:text-cyan-300 transition">
+                Courses
+              </Link>
+              <Link to="/about" className="hover:text-cyan-300 transition">
+                About Us
+              </Link>
+              <Link to="/webinar" className="hover:text-cyan-300 transition">
+                Webinar
+              </Link>
+              <Link to="/contact" className="hover:text-cyan-300 transition">
+                Contact Us
+              </Link>
             </div>
 
             {/* Desktop Button */}
@@ -129,13 +171,42 @@ const Navbar = ({ type }) => {
           {/* ⭐ MOBILE MENU */}
           {mobileOpen && (
             <div className="md:hidden bg-[#0B1320]/95 text-white px-6 py-6 space-y-6 shadow-lg">
-
               <nav className="flex flex-col space-y-4 text-lg font-medium">
-                <Link to="/" onClick={() => setMobileOpen(false)} className="hover:text-cyan-300 transition">Home</Link>
-                <Link to="/course" onClick={() => setMobileOpen(false)} className="hover:text-cyan-300 transition">Courses</Link>
-                <Link to="/about" onClick={() => setMobileOpen(false)} className="hover:text-cyan-300 transition">About Us</Link>
-                <Link to="/webinar" onClick={() => setMobileOpen(false)} className="hover:text-cyan-300 transition">Webinar</Link>
-                <Link to="/contact" onClick={() => setMobileOpen(false)} className="hover:text-cyan-300 transition">Contact Us</Link>
+                <Link
+                  to="/"
+                  onClick={() => setMobileOpen(false)}
+                  className="hover:text-cyan-300 transition"
+                >
+                  Home
+                </Link>
+                <Link
+                  to="/course"
+                  onClick={() => setMobileOpen(false)}
+                  className="hover:text-cyan-300 transition"
+                >
+                  Courses
+                </Link>
+                <Link
+                  to="/about"
+                  onClick={() => setMobileOpen(false)}
+                  className="hover:text-cyan-300 transition"
+                >
+                  About Us
+                </Link>
+                <Link
+                  to="/webinar"
+                  onClick={() => setMobileOpen(false)}
+                  className="hover:text-cyan-300 transition"
+                >
+                  Webinar
+                </Link>
+                <Link
+                  to="/contact"
+                  onClick={() => setMobileOpen(false)}
+                  className="hover:text-cyan-300 transition"
+                >
+                  Contact Us
+                </Link>
               </nav>
 
               {!isLoggedIn ? (

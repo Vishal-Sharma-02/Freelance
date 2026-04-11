@@ -48,7 +48,7 @@ const Footer = ()=>{
           <ul className="space-y-2 text-gray-300">
             <li>» Digital Product Course</li>
             <li>» Script Writing</li>
-           
+            <li>» Digital Product Business Guide </li>
           </ul>
         </div>
 

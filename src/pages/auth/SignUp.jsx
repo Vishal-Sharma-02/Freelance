@@ -38,7 +38,8 @@ const SignUp = () => {
   const [acceptPrivacy, setAcceptPrivacy] = useState(false);
 const [orderData, setOrderData] = useState(null);
 const passwordRegex =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  // /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  /^.{4,}$/;
 
 useEffect(() => {
   if (showSignupPopup) {
@@ -77,7 +78,7 @@ useEffect(() => {
 
 if (!passwordRegex.test(form.password)) {
   return setErrorMsg(
-    "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character."
+    "Password must be at least 4 characters long."
   );
 }
     if (form.password !== form.confirmPassword) {

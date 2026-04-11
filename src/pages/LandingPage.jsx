@@ -9,7 +9,8 @@ const LandingPage = () => {
     "Digital Product Course",
     //"Graphic Designing",
     "Script Writing",
-   // "Social Media Management",
+    "Digital Product Business Guide ",
+    // "Social Media Management",
     //"Turn Your Free Time into Income",
   ];
 
@@ -45,7 +46,8 @@ const LandingPage = () => {
               {/* Mobile Book Image */}
               <div className="lg:hidden flex justify-center mt-6">
                 <img
-                  src="https://res.cloudinary.com/dhulhgd5y/image/upload/v1768939097/WhatsApp_Image_2026-01-14_at_16.03.55_c7lt21.jpg"
+                  //src="https://res.cloudinary.com/dhulhgd5y/image/upload/v1768939097/WhatsApp_Image_2026-01-14_at_16.03.55_c7lt21.jpg"
+                  src="https://res.cloudinary.com/dhulhgd5y/image/upload/v1774889589/promopage_photoes_fqxqux.png"
                   alt="Mastery Book"
                   className="
                     w-40 md:w-52
@@ -65,11 +67,11 @@ const LandingPage = () => {
               <div className="mt-4 text-center lg:text-left">
                 <div className="flex items-center justify-center lg:justify-start gap-3">
                   <span className="text-gray-400 line-through text-lg">
-                    ₹2299
+                    ₹2799
                   </span>
 
                   <span className="text-yellow-400 text-3xl font-extrabold">
-                    ₹1499
+                    ₹1999
                   </span>
 
                   <span className="bg-green-600/20 text-green-400 text-sm font-semibold px-3 py-1 rounded-full">
@@ -88,7 +90,7 @@ const LandingPage = () => {
                 className="inline-block mt-5 relative p-[2px] rounded-lg bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500 group"
               >
                 <span className="block px-8 py-4 bg-[#1c1607] rounded-lg text-white font-bold text-lg">
-                  Get Instant Access for ₹1499
+                  Get Instant Access for ₹1999
                 </span>
               </Link>
             </div>
@@ -120,7 +122,7 @@ const LandingPage = () => {
             {/* LEFT – BOOK IMAGE FULL HEIGHT (DESKTOP ONLY) */}
             <div className="hidden lg:flex justify-center">
               <img
-                src="https://res.cloudinary.com/dhulhgd5y/image/upload/v1768939097/WhatsApp_Image_2026-01-14_at_16.03.55_c7lt21.jpg"
+                src="https://res.cloudinary.com/dhulhgd5y/image/upload/v1774889589/promopage_photoes_fqxqux.png"
                 alt="Mastery Pack Book"
                 className="
       w-64 md:w-80 lg:w-[420px]
@@ -164,7 +166,7 @@ const LandingPage = () => {
               className="w-full max-w-2xl relative p-[3px] rounded-xl bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500 group"
             >
               <span className="block w-full bg-[#1d1507] text-white font-bold text-xl py-4 rounded-xl text-center tracking-wide group-hover:bg-[#2a210a] transition">
-                Enroll Now – Pay ₹1499
+                Enroll Now – Pay ₹1999
               </span>
             </Link>
           </div>

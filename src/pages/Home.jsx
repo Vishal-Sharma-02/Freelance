@@ -62,7 +62,7 @@ const Home = () => {
 
                 {/* Book Image */}
                 <img
-                  src="https://res.cloudinary.com/dhulhgd5y/image/upload/v1769057276/WhatsApp_Image_2026-01-22_at_09.46.55_ama06v.jpg"
+                  src="https://res.cloudinary.com/dhulhgd5y/image/upload/v1774889586/Homepage_photoes_kve0by.png"
                   alt="Mastery Pack"
                   className="relative w-[80%] object-contain drop-shadow-[0_0_25px_rgba(255,170,50,0.45)]"
                 />
