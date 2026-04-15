@@ -21,7 +21,7 @@ const CourseDetails = () => {
   const verifyUserSubscription = async () => {
     try {
       const res = await api.get("/premium/verify");
-      setIsUserSubscribed(res.data.isSubscribed);
+      setIsUserSubscribed(res.data.data.isSubscribed);
     } catch {
       setIsUserSubscribed(false);
     }
@@ -39,7 +39,7 @@ const CourseDetails = () => {
     const fetchCourse = async () => {
       try {
         const res = await api.get(`/course/${id}`);
-        setCourse(res.data);
+        setCourse(res.data.data);
 
         // Always verify (backend will reject if not logged in)
         await verifyUserSubscription();
@@ -119,7 +119,7 @@ const CourseDetails = () => {
                 className="
                   w-full sm:w-auto
                   px-8 py-3
-                  bg-gradient-to-r from-blue-600 to-blue-800
+                  bg-linear-to-r from-blue-600 to-blue-800
                   text-white text-lg font-semibold
                   rounded-full
                   shadow-lg

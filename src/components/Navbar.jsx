@@ -27,7 +27,7 @@ const Navbar = ({ type }) => {
             <div className="hidden md:block">
               <Link
                 to="/signup"
-                className="bg-gradient-to-r from-purple-500 to-cyan-400
+                className="bg-linear-to-r from-purple-500 to-cyan-400
                            text-white font-semibold px-7 py-3 rounded-full 
                            shadow-lg hover:scale-105 transition"
               >
@@ -88,7 +88,7 @@ const Navbar = ({ type }) => {
                 <Link
                   to="/login"
                   onClick={() => setMobileOpen(false)}
-                  className="block w-full text-center bg-gradient-to-r from-purple-500 to-cyan-400
+                  className="block w-full text-center bg-linear-to-r from-purple-500 to-cyan-400
                             text-white font-semibold px-7 py-3 rounded-full shadow-lg mt-4"
                 >
                   Log in / SignUp
@@ -143,7 +143,7 @@ const Navbar = ({ type }) => {
               {!isLoggedIn ? (
                 <Link
                   to="/login"
-                  className="bg-gradient-to-r from-purple-500 to-cyan-400
+                  className="bg-linear-to-r from-purple-500 to-cyan-400
                            px-6 py-2 rounded-full font-semibold text-white 
                            shadow-lg hover:scale-105 transition"
                 >
@@ -213,7 +213,7 @@ const Navbar = ({ type }) => {
                 <Link
                   to="/login"
                   onClick={() => setMobileOpen(false)}
-                  className="block w-full text-center bg-gradient-to-r from-purple-500 to-cyan-400
+                  className="block w-full text-center bg-linear-to-r from-purple-500 to-cyan-400
                             text-white font-semibold px-7 py-3 rounded-full shadow-lg mt-4"
                 >
                   Log in / SignUp

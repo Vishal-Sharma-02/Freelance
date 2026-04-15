@@ -17,7 +17,7 @@ const PaymentStatus = () => {
       try {
         const res = await api.get("/premium/verify");
 
-        if (res.data.isSubscribed) {
+        if (res.data.data.isSubscribed) {
           setIsSuccess(true);
         } else {
           setIsSuccess(false);

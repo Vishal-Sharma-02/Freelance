@@ -18,51 +18,71 @@ const LogIn = () => {
 
   const togglePassword = () => setShowPass(!showPass);
 
+  // Check if already logged in
   useEffect(() => {
     if (user?.emailId) {
-      navigate("/profile");  // Already logged in → redirect
+      console.log("User already logged in, redirecting to profile");
+      navigate("/profile", { replace: true });
     }
-  }, [user]);
+  }, [user?.emailId, navigate]);
 
   const handleClick = async (e) => {
-  e.preventDefault();
-  setErrorMsg("");
+    e.preventDefault();
+    setErrorMsg("");
 
-  if (!emailId || !password) {
-    setErrorMsg("Please enter both email and password");
-    return;
-  }
+    if (!emailId || !password) {
+      setErrorMsg("Please enter both email and password");
+      return;
+    }
 
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
+      const res = await api.post("/auth/login", {
+        emailId,
+        password,
+      });
 
-   const res = await api.post("/auth/login", {
-  emailId,
-  password,
-});
+      console.log("✅ Login Response:", res.data);
 
-// Save token
-if (res.data.token) {
-  localStorage.setItem("token", res.data.token);
-}
+      // Handle response - data can be in res.data.data (with sendSuccess) or res.data (without)
+      const userData = res.data.data?.user || res.data.user;
+      const token = res.data.data?.token || res.data.token;
 
-// 🚀 USE USER FROM LOGIN RESPONSE
-dispatch(addUser(res.data.user));
-await persistor.flush();
+      console.log("📦 Extracted Data:", { userData, token });
 
-// Redirect immediately
-navigate("/profile");
-  } catch (err) {
-    const message =
-      err.response?.data?.message || "Invalid credentials. Please try again.";
-    setErrorMsg(message);
-  } finally {
-    setLoading(false);
-  }
-};
+      // Validate response has user data
+      if (!userData || !userData.emailId) {
+        setErrorMsg("Invalid login response from server");
+        console.error("❌ Missing user data:", { userData, token });
+        return;
+      }
+
+      // Save token to localStorage
+      if (token) {
+        localStorage.setItem("token", token);
+        console.log("💾 Token saved to localStorage");
+      }
+
+      // Dispatch user to Redux - this will trigger the useEffect above
+      console.log("🚀 Dispatching user to Redux");
+      dispatch(addUser(userData));
+      
+      // Flush persistor to save to localStorage
+      await persistor.flush();
+      console.log("✅ Persistor flushed");
+      
+    } catch (err) {
+      console.error("❌ Login Error:", err);
+      const message =
+        err.response?.data?.message || "Invalid credentials. Please try again.";
+      setErrorMsg(message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-200 via-purple-100 to-purple-50 flex items-center justify-center px-4 py-10">
+    <div className="min-h-screen bg-linear-to-br from-purple-200 via-purple-100 to-purple-50 flex items-center justify-center px-4 py-10">
 
       {/* Main Card */}
       <div className="w-full max-w-md bg-white/70 backdrop-blur-xl shadow-2xl rounded-2xl p-8 border border-white">

@@ -14,9 +14,9 @@ const Learning = () => {
     const fetchCourse = async () => {
       try {
         const res = await api.get(`/course/${id}`);
-        setCourse(res.data);
+        setCourse(res.data.data);
 
-        const first = res.data.modules?.[0]?.lectures?.[0];
+        const first = res.data.data.modules?.[0]?.lectures?.[0];
         if (first) setCurrentVideo(first);
       } catch (err) {
         console.error(err);

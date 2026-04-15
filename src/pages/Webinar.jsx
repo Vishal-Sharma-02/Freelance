@@ -32,7 +32,7 @@ const Webinar = () => {
 
       const res = await axios.post(`${BASE_URL}/webinar/contact`, form);
 
-      if (res.data.success) {
+      if (res.data.status === "success") {
         setSuccessMsg("Thank you! We will contact you within 24 hours or sooner.");
         setForm({ name: "", email: "", phone: "", message: "" }); // reset form
         setTimeout(() => setSuccessMsg(""), 3000); // clear message after 10 seconds
@@ -44,7 +44,7 @@ const Webinar = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 to-purple-50 py-10">
+    <div className="min-h-screen bg-linear-to-br from-purple-100 to-purple-50 py-10">
       <div className="max-w-5xl mx-auto px-6">
         <h1 className="text-4xl font-bold text-gray-900">Get Webinar Link</h1>
       </div>
@@ -101,7 +101,7 @@ const Webinar = () => {
 
             <button
               type="submit"
-              className="bg-gradient-to-r from-yellow-500 to-yellow-700 hover:opacity-90 text-white px-10 py-3 rounded-full text-lg font-semibold transition-all shadow-md"
+              className="bg-linear-to-r from-yellow-500 to-yellow-700 hover:opacity-90 text-white px-10 py-3 rounded-full text-lg font-semibold transition-all shadow-md"
             >
               Submit
             </button>

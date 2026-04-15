@@ -23,6 +23,8 @@ import AddCourse from './admin/AddCourse.jsx';
 import CourseDetails from './pages/CourseDetail.jsx';
 import Learning from './pages/Learning.jsx';
 import EditCourse from './admin/EditCourse.jsx';
+// import AdminPanel from './admin/Users.jsx';
+import AdminPanel from "./admin/AdminPanel.jsx";
 import PaymentStart from './pages/PaymentStart.jsx';
 import PaymentStatus from './pages/PaymentStatus.jsx';
 import ForgotPassword from './pages/ForgotPassword.jsx';
@@ -51,6 +53,7 @@ export default function App() {
             <Route path='/learn/:id' element={<ProtectedRoute><Learning /></ProtectedRoute>} />
             <Route path='/about' element={<AboutUs/>} />
             <Route path='/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="/admin-panel" element={<ProtectedRoute><AdminPanel /></ProtectedRoute>} />
             <Route path="/addcourse" element={<ProtectedRoute><AddCourse /></ProtectedRoute>} />
             <Route path="/editcourse/:id" element={<ProtectedRoute><EditCourse /></ProtectedRoute>} />
             <Route path="/payment-start" element={<ProtectedRoute><PaymentStart /></ProtectedRoute>} />

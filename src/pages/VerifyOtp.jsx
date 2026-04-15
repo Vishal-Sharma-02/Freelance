@@ -14,7 +14,7 @@ const VerifyOtp = () => {
     e.preventDefault();
 
     try {
-      await axios.post(`${BASE_URL}/auth/verify-otp`, {
+      const res = await axios.post(`${BASE_URL}/auth/verify-otp`, {
         emailId: email,
         otp,
       });

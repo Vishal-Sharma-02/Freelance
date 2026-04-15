@@ -11,7 +11,7 @@ const Courses = () => {
     const fetchCourses = async () => {
       try {
         const response = await api.get("/course/all");
-        setCourses(response.data);
+        setCourses(response.data.data);
       } catch (err) {
         console.error(err);
         setError("Failed to load courses");
@@ -24,7 +24,7 @@ const Courses = () => {
   }, []);
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-white to-gray-100 px-6 pt-10 text-gray-900">
+    <div className="min-h-screen w-full bg-linear-to-b from-white to-gray-100 px-6 pt-10 text-gray-900">
 
       {/* HEADER */}
       <div className="max-w-7xl mx-auto flex justify-between items-center mb-16">
