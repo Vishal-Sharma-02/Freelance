@@ -2,7 +2,7 @@ import React, {useEffect, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
-import { removeUser } from "../utils/userSlice";
+import { addUser, removeUser } from "../utils/userSlice";
 import { persistor } from "../utils/appStore";
 import api from "../utils/axiosInstance";
 import { startPremiumPayment } from "../services/paymentService";
@@ -16,7 +16,7 @@ const Profile = () => {
 
   const dispatch = useDispatch();
   const reduxUser = useSelector((state) => state.user);
-  console.log("USER:", reduxUser);
+  // console.log("USER:", reduxUser); 
  
   useEffect(() => {
   const fetchProfile = async () => {
@@ -32,7 +32,6 @@ const Profile = () => {
       setIsSubscribed(true);
     }
       setUser(profileRes.data.data);
-
     } catch (err) {
       console.error(err);
       navigate("/login"); // auto redirect if unauthorized

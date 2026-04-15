@@ -6,6 +6,7 @@ import {
   fetchCourses as fetchCoursesApi, 
   deleteUser as deleteUserApi, 
   deleteCourse as deleteCourseApi, 
+  updateUser as updateUserApi,
   isUserAdmin 
 } from "./adminUtils";
 import AddCourse from "./AddCourse";
@@ -39,19 +40,7 @@ const AdminPanel = () => {
     }
   }, [user, navigate]);
 
-  // Fetch users with pagination and search
-  useEffect(() => {
-    if (active === "users") {
-      loadUsers();
-    }
-  }, [active, loadUsers]);
 
-  // Fetch courses with pagination and search
-  useEffect(() => {
-    if (active === "courses") {
-      loadCourses();
-    }
-  }, [active, loadCourses]);
 
   const loadUsers = useCallback(async () => {
     try {
@@ -80,6 +69,20 @@ const AdminPanel = () => {
       setLoading(false);
     }
   }, [coursePage, courseSearch]);
+
+    // Fetch users with pagination and search
+  useEffect(() => {
+    if (active === "users") {
+      loadUsers();
+    }
+  }, [active, loadUsers]);
+
+  // Fetch courses with pagination and search
+  useEffect(() => {
+    if (active === "courses") {
+      loadCourses();
+    }
+  }, [active, loadCourses]);
 
   const handleUserSearch = (e) => {
     setUserSearch(e.target.value);
@@ -112,6 +115,21 @@ const AdminPanel = () => {
         console.error("Error deleting user:", err);
         alert("Failed to delete user");
       }
+    }
+  };
+
+  const [updatingUsers, setUpdatingUsers] = useState([]);
+
+  const handleSubscriptionChange = async (userId, newSubscribed) => {
+    try {
+      setUpdatingUsers((s) => [...s, userId]);
+      await updateUserApi(userId, { isSubscribed: newSubscribed });
+      setUsers((prev) => prev.map((u) => (u._id === userId ? { ...u, subscribed: newSubscribed } : u)));
+    } catch (err) {
+      console.error("Failed to update subscription:", err);
+      alert("Failed to update subscription");
+    } finally {
+      setUpdatingUsers((s) => s.filter((id) => id !== userId));
     }
   };
 
@@ -219,15 +237,19 @@ const AdminPanel = () => {
                         <td className="p-4">{u.emailId || "N/A"}</td>
                         <td className="p-4">{u.state || "N/A"}</td>
                         <td className="p-4">
-                          <span
-                            className={`px-3 py-1 rounded-full font-semibold text-sm ${
-                              u.isSubscribed
-                                ? "bg-green-100 text-green-800"
-                                : "bg-red-100 text-red-800"
-                            }`}
+                          <select
+                            value={u.subscribed ? "yes" : "no"}
+                            onChange={(e) => handleSubscriptionChange(u._id, e.target.value === "yes")}
+                            disabled={updatingUsers.includes(u._id)}
+                            className={`px-3 py-1 rounded font-medium text-sm border ${
+                              u.subscribed
+                                ? "bg-green-100 text-green-800 border-green-200"
+                                : "bg-red-100 text-red-800 border-red-200"
+                            } ${updatingUsers.includes(u._id) ? "opacity-60 cursor-not-allowed" : ""}`}
                           >
-                            {u.isSubscribed ? "Yes" : "No"}
-                          </span>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                          </select>
                         </td>
                         <td className="p-4">
                           <button

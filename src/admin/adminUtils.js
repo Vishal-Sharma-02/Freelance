@@ -3,16 +3,16 @@ import api from "../utils/axiosInstance";
 // Fetch all users with pagination and search
 export const fetchUsers = async (page = 1, limit = 10, search = "") => {
   try {
-    const res = await api.get("/admin/users", {
+    const res = await api.get("/user", {
       params: {
         page,
         limit,
-        search,
+        search
       },
     });
     return {
-      users: res.data.data.users || [],
-      totalPages: res.data.data.totalPages || 1,
+      users: res?.data?.data?.users || [],
+      totalPages: res?.data?.data?.totalPages || 1,
       currentPage: page,
     };
   } catch (err) {
@@ -24,16 +24,17 @@ export const fetchUsers = async (page = 1, limit = 10, search = "") => {
 // Fetch all courses with pagination and search
 export const fetchCourses = async (page = 1, limit = 10, search = "") => {
   try {
-    const res = await api.get("/admin/courses", {
+    const res = await api.get("/course", {
       params: {
         page,
         limit,
         search,
       },
     });
+    console.log("Fetched courses:", res?.data?.data);
     return {
-      courses: res.data.data.courses || [],
-      totalPages: res.data.data.totalPages || 1,
+      courses: res?.data?.data || [],
+      totalPages: res?.data?.data?.totalPages || 1,
       currentPage: page,
     };
   } catch (err) {
@@ -45,7 +46,7 @@ export const fetchCourses = async (page = 1, limit = 10, search = "") => {
 // Delete a user
 export const deleteUser = async (userId) => {
   try {
-    const res = await api.delete(`/admin/users/${userId}`);
+    const res = await api.delete(`/users/${userId}`);
     return res.data;
   } catch (err) {
     console.error("Error deleting user:", err);
@@ -53,10 +54,22 @@ export const deleteUser = async (userId) => {
   }
 };
 
+// Update user's subscription or other fields (admin)
+export const updateUser = async (userId, data) => {
+  console.log("Updating user:", userId, data.isSubscribed);
+  try {
+    const res = await api.patch(`/user/update/${userId}`, {isSubscribed: data.isSubscribed});
+    return res.data;
+  } catch (err) {
+    console.error("Error updating user:", err);
+    throw new Error(err.response?.data?.message || "Failed to update user");
+  }
+};
+
 // Delete a course
 export const deleteCourse = async (courseId) => {
   try {
-    const res = await api.delete(`/admin/courses/${courseId}`);
+    const res = await api.delete(`/course/${courseId}`);
     return res.data;
   } catch (err) {
     console.error("Error deleting course:", err);
@@ -99,7 +112,7 @@ export const fetchCourseById = async (courseId) => {
 
 // Check if user is admin
 export const isUserAdmin = (user) => {
-  return user?.isAdmin === true || user?.role === "admin";
+  return user?.role === "admin";
 };
 
 // Export all functions as default
