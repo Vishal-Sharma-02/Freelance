@@ -1,19 +1,27 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = null;
+const initialState = {
+  data: null,
+  loading: false,
+};
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
     addUser: (state, action) => {
-      return action.payload ?? null;  // prevent undefined
+      state.data = action.payload ?? null;
+      state.loading = false;
     },
-    removeUser: () => {
-      return null;
+    removeUser: (state) => {
+      state.data = null;
+      state.loading = false;
+    },
+    setLoading: (state, action) => {
+      state.loading = action.payload;
     },
   },
 });
 
-export const { addUser, removeUser } = userSlice.actions;
+export const { addUser, removeUser, setLoading } = userSlice.actions;
 export default userSlice.reducer;

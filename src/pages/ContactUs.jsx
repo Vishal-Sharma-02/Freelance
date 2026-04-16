@@ -23,7 +23,7 @@ const ContactUs = () => {
     setResponseMsg("");
 
     try {
-      const res = await fetch(`${BASE_URL}/contact/send`, {
+      const res = await fetch(`${BASE_URL}/send`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

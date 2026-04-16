@@ -9,7 +9,7 @@ const MyCourses = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user.data);
 
   useEffect(() => {
   const fetchCourses = async () => {

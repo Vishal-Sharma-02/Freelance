@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
+import api from "../utils/axiosInstance";
 import { 
   fetchUsers as fetchUsersApi, 
   fetchCourses as fetchCoursesApi, 
-  deleteUser as deleteUserApi, 
   deleteCourse as deleteCourseApi, 
   updateUser as updateUserApi,
-  isUserAdmin 
 } from "./adminUtils";
 import AddCourse from "./AddCourse";
 
@@ -26,21 +26,35 @@ const AdminPanel = () => {
   // Search states
   const [userSearch, setUserSearch] = useState("");
   const [courseSearch, setCourseSearch] = useState("");
+  const [userSubscriptionFilter, setUserSubscriptionFilter] = useState("all");
   
   // View states
   const [showAddCourse, setShowAddCourse] = useState(false);
+  const [adminLoading, setAdminLoading] = useState(true);
   
   const navigate = useNavigate();
-  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
-  // Check if user is admin
   useEffect(() => {
-    if (!isUserAdmin(user)) {
-      navigate("/profile");
-    }
-  }, [user, navigate]);
+    const validateAdmin = async () => {
+      try {
+        const res = await api.get("/user/profile");
+        const backendUser = res?.data?.data?.user || res?.data?.data;
+        dispatch(addUser(backendUser));
 
+        if (!backendUser?.role || backendUser.role !== "admin") {
+          navigate("/profile");
+        }
+      } catch (err) {
+        console.error("Admin validation failed:", err);
+        navigate("/login");
+      } finally {
+        setAdminLoading(false);
+      }
+    };
 
+    validateAdmin();
+  }, [dispatch, navigate]);
 
   const loadUsers = useCallback(async () => {
     try {
@@ -72,17 +86,17 @@ const AdminPanel = () => {
 
     // Fetch users with pagination and search
   useEffect(() => {
-    if (active === "users") {
+    if (active === "users" && !adminLoading) {
       loadUsers();
     }
-  }, [active, loadUsers]);
+  }, [active, loadUsers, adminLoading]);
 
   // Fetch courses with pagination and search
   useEffect(() => {
-    if (active === "courses") {
+    if (active === "courses" && !adminLoading) {
       loadCourses();
     }
-  }, [active, loadCourses]);
+  }, [active, loadCourses, adminLoading]);
 
   const handleUserSearch = (e) => {
     setUserSearch(e.target.value);
@@ -93,6 +107,17 @@ const AdminPanel = () => {
     setCourseSearch(e.target.value);
     setCoursePage(1);
   };
+
+  const handleUserFilterChange = (e) => {
+    setUserSubscriptionFilter(e.target.value);
+    setUserPage(1);
+  };
+
+  const filteredUsers = users.filter((user) => {
+    if (userSubscriptionFilter === "subscribed") return user.subscribed;
+    if (userSubscriptionFilter === "unsubscribed") return !user.subscribed;
+    return true;
+  });
 
   const handleDeleteCourse = async (courseId) => {
     if (window.confirm("Are you sure you want to delete this course?")) {
@@ -106,31 +131,44 @@ const AdminPanel = () => {
     }
   };
 
-  const handleDeleteUser = async (userId) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
-      try {
-        await deleteUserApi(userId);
-        loadUsers();
-      } catch (err) {
-        console.error("Error deleting user:", err);
-        alert("Failed to delete user");
-      }
-    }
+  const [updatingUsers, setUpdatingUsers] = useState([]);
+  const [subscriptionConfirm, setSubscriptionConfirm] = useState({
+    userId: null,
+    newSubscribed: null,
+  });
+  const [subscriptionConfirmLoading, setSubscriptionConfirmLoading] = useState(false);
+
+  const subscriptionConfirmUser = users.find((u) => u._id === subscriptionConfirm.userId);
+
+  const handleSubscriptionChange = (userId, newSubscribed) => {
+    setSubscriptionConfirm({ userId, newSubscribed });
   };
 
-  const [updatingUsers, setUpdatingUsers] = useState([]);
+  const handleConfirmSubscription = async () => {
+    const { userId, newSubscribed } = subscriptionConfirm;
+    if (!userId) return;
 
-  const handleSubscriptionChange = async (userId, newSubscribed) => {
+    setSubscriptionConfirmLoading(true);
     try {
       setUpdatingUsers((s) => [...s, userId]);
       await updateUserApi(userId, { isSubscribed: newSubscribed });
-      setUsers((prev) => prev.map((u) => (u._id === userId ? { ...u, subscribed: newSubscribed } : u)));
+      setUsers((prev) =>
+        prev.map((u) =>
+          u._id === userId ? { ...u, subscribed: newSubscribed } : u
+        )
+      );
+      setSubscriptionConfirm({ userId: null, newSubscribed: null });
     } catch (err) {
       console.error("Failed to update subscription:", err);
       alert("Failed to update subscription");
     } finally {
+      setSubscriptionConfirmLoading(false);
       setUpdatingUsers((s) => s.filter((id) => id !== userId));
     }
+  };
+
+  const handleCancelSubscriptionChange = () => {
+    setSubscriptionConfirm({ userId: null, newSubscribed: null });
   };
 
   if (showAddCourse) {
@@ -150,10 +188,21 @@ const AdminPanel = () => {
     );
   }
 
+  if (adminLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="rounded-3xl bg-white p-8 shadow-lg text-center">
+          <p className="text-xl font-semibold text-gray-900">Checking admin access...</p>
+          <p className="mt-2 text-gray-600">Please wait while we validate your account.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
       {/* LEFT SIDEBAR */}
-      <div className="w-64 bg-linear-to-b from-gray-900 to-gray-800 text-white p-6 shadow-lg">
+      <div className="w-full md:w-64 bg-linear-to-b from-gray-900 to-gray-800 text-white p-6 shadow-lg">
         <div className="mb-8">
           <h2 className="text-3xl font-bold">Admin Panel</h2>
           <p className="text-gray-400 text-sm mt-1">Manage your platform</p>
@@ -191,14 +240,14 @@ const AdminPanel = () => {
       </div>
 
       {/* RIGHT CONTENT AREA */}
-      <div className="flex-1 p-8 overflow-auto">
+      <div className="flex-1 p-4 md:p-8 overflow-auto">
         {/* USERS SECTION */}
         {active === "users" && (
           <div>
             <h1 className="text-4xl font-bold text-gray-800 mb-6">Manage Users</h1>
 
             {/* Search Bar */}
-            <div className="mb-6">
+            <div className="mb-6 grid gap-4 sm:grid-cols-2">
               <input
                 type="text"
                 placeholder="Search users by name or email..."
@@ -206,32 +255,40 @@ const AdminPanel = () => {
                 onChange={handleUserSearch}
                 className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 shadow-sm"
               />
+              <select
+                value={userSubscriptionFilter}
+                onChange={handleUserFilterChange}
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 shadow-sm"
+              >
+                <option value="all">All subscriptions</option>
+                <option value="subscribed">Subscribed</option>
+                <option value="unsubscribed">Unsubscribed</option>
+              </select>
             </div>
 
             {/* Users Table */}
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div className="bg-white rounded-lg shadow-lg overflow-x-auto">
               {loading ? (
                 <div className="p-8 text-center">
                   <p className="text-lg text-gray-600">Loading users...</p>
                 </div>
-              ) : users.length === 0 ? (
+              ) : filteredUsers.length === 0 ? (
                 <div className="p-8 text-center">
                   <p className="text-lg text-gray-600">No users found</p>
                 </div>
               ) : (
-                <table className="w-full">
+                <table className="min-w-full table-auto">
                   <thead>
                     <tr className="bg-gray-200 border-b-2 border-gray-300">
                       <th className="p-4 text-left font-bold text-gray-700">Name</th>
                       <th className="p-4 text-left font-bold text-gray-700">Email</th>
                       <th className="p-4 text-left font-bold text-gray-700">State</th>
                       <th className="p-4 text-left font-bold text-gray-700">Subscribed</th>
-                      <th className="p-4 text-left font-bold text-gray-700">Actions</th>
                     </tr>
                   </thead>
 
                   <tbody>
-                    {users.map((u, index) => (
+                    {filteredUsers.map((u, index) => (
                       <tr key={u._id || index} className="border-b hover:bg-gray-50 transition">
                         <td className="p-4">{u.fullName || "N/A"}</td>
                         <td className="p-4">{u.emailId || "N/A"}</td>
@@ -250,14 +307,6 @@ const AdminPanel = () => {
                             <option value="yes">Yes</option>
                             <option value="no">No</option>
                           </select>
-                        </td>
-                        <td className="p-4">
-                          <button
-                            onClick={() => handleDeleteUser(u._id)}
-                            className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition text-sm font-semibold"
-                          >
-                            Delete
-                          </button>
                         </td>
                       </tr>
                     ))}
@@ -286,17 +335,48 @@ const AdminPanel = () => {
                 Next
               </button>
             </div>
+
+            {subscriptionConfirm.userId && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+                <div className="w-full max-w-lg rounded-3xl bg-white p-6 shadow-2xl">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                    Confirm subscription change
+                  </h2>
+                  <p className="text-gray-700 mb-6">
+                    Are you sure you want to {subscriptionConfirm.newSubscribed ? "subscribe" : "unsubscribe"} 
+                    <span className="font-semibold">{subscriptionConfirmUser?.fullName || "this user"}</span>?
+                  </p>
+                  <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+                    <button
+                      type="button"
+                      onClick={handleCancelSubscriptionChange}
+                      className="w-full sm:w-auto px-5 py-3 rounded-full border border-gray-300 text-gray-700 hover:bg-gray-50 transition"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleConfirmSubscription}
+                      disabled={subscriptionConfirmLoading}
+                      className="w-full sm:w-auto px-5 py-3 rounded-full bg-blue-600 text-white font-semibold hover:bg-blue-700 transition disabled:opacity-60 disabled:cursor-not-allowed"
+                    >
+                      {subscriptionConfirmLoading ? "Saving..." : "Confirm"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
         {/* COURSES SECTION */}
         {active === "courses" && (
           <div>
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex flex-col gap-4 md:flex-row md:justify-between md:items-center mb-6">
               <h1 className="text-4xl font-bold text-gray-800">Manage Courses</h1>
               <button
                 onClick={() => setShowAddCourse(true)}
-                className="px-6 py-3 bg-linear-to-r from-green-600 to-green-700 text-white rounded-lg font-semibold hover:from-green-700 hover:to-green-800 shadow-lg transition"
+                className="w-full md:w-auto px-6 py-3 bg-linear-to-r from-green-600 to-green-700 text-white rounded-lg font-semibold hover:from-green-700 hover:to-green-800 shadow-lg transition"
               >
                 + Add Course
               </button>
@@ -314,7 +394,7 @@ const AdminPanel = () => {
             </div>
 
             {/* Courses Table */}
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div className="bg-white rounded-lg shadow-lg overflow-x-auto">
               {loading ? (
                 <div className="p-8 text-center">
                   <p className="text-lg text-gray-600">Loading courses...</p>
@@ -324,7 +404,7 @@ const AdminPanel = () => {
                   <p className="text-lg text-gray-600">No courses found</p>
                 </div>
               ) : (
-                <table className="w-full">
+                <table className="min-w-full table-auto">
                   <thead>
                     <tr className="bg-gray-200 border-b-2 border-gray-300">
                       <th className="p-4 text-left font-bold text-gray-700">Title</th>

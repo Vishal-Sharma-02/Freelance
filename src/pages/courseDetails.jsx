@@ -9,7 +9,7 @@ const CourseDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user.data);
 
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);

@@ -2,11 +2,11 @@ import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children }) => {
-  const user = useSelector((state) => state.user);
+  const { data: user, loading } = useSelector((state) => state.user);
 
-  // ⏳ Still verifying session
-  if (user === undefined) {
-    return null; // or loader
+  // ⏳ Still verifying session while no user exists yet
+  if (loading && !user) {
+    return <div>Loading...</div>; // or spinner
   }
 
   // ❌ Not logged in

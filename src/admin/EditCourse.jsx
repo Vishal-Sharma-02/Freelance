@@ -92,7 +92,7 @@ const EditCourse = () => {
     e.preventDefault();
 
     try {
-     const res = await api.put(`/course/update/${course._id}`, course);
+      const res = await api.patch(`/course/${course._id}`, course);
 
       alert(res.data.message || "Course updated successfully!");
 

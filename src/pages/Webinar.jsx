@@ -12,7 +12,7 @@ const Webinar = () => {
     message: "",
   });
 
-   const user = useSelector((state) => state.user);
+   const user = useSelector((state) => state.user.data);
    const navigate = useNavigate();
   const [successMsg, setSuccessMsg] = useState("");
 

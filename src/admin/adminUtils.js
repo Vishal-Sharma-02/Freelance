@@ -43,22 +43,12 @@ export const fetchCourses = async (page = 1, limit = 10, search = "") => {
   }
 };
 
-// Delete a user
-export const deleteUser = async (userId) => {
-  try {
-    const res = await api.delete(`/users/${userId}`);
-    return res.data;
-  } catch (err) {
-    console.error("Error deleting user:", err);
-    throw new Error(err.response?.data?.message || "Failed to delete user");
-  }
-};
 
 // Update user's subscription or other fields (admin)
 export const updateUser = async (userId, data) => {
   console.log("Updating user:", userId, data.isSubscribed);
   try {
-    const res = await api.patch(`/user/update/${userId}`, {isSubscribed: data.isSubscribed});
+    const res = await api.patch(`/user/${userId}`, { isSubscribed: data.isSubscribed });
     return res.data;
   } catch (err) {
     console.error("Error updating user:", err);
@@ -91,7 +81,7 @@ export const createCourse = async (courseData) => {
 // Update a course
 export const updateCourse = async (courseId, courseData) => {
   try {
-    const res = await api.put(`/course/edit/${courseId}`, courseData);
+    const res = await api.patch(`/course/${courseId}`, courseData);
     return res.data;
   } catch (err) {
     console.error("Error updating course:", err);
@@ -112,14 +102,14 @@ export const fetchCourseById = async (courseId) => {
 
 // Check if user is admin
 export const isUserAdmin = (user) => {
-  return user?.role === "admin";
+  const actualUser = user?.data ?? user;
+  return actualUser?.role === "admin";
 };
 
 // Export all functions as default
 export default {
   fetchUsers,
   fetchCourses,
-  deleteUser,
   deleteCourse,
   createCourse,
   updateCourse,

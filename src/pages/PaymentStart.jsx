@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { startPremiumPayment } from "../services/paymentService";
 
 const PaymentStart = () => {
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user.data);
   const navigate = useNavigate();
 
   useEffect(() => {

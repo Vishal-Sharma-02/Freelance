@@ -6,8 +6,8 @@ const Navbar = ({ type }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
  
    // ⭐ CHECK LOGIN FROM REDUX STORE (PERSISTED)
-  const user = useSelector((state) => state.user);
-  const isLoggedIn = Boolean(user && user._id);    
+  const user = useSelector((state) => state.user.data);
+  const isLoggedIn = Boolean(user?.emailId);    
 
   return (
     <div className="w-full fixed top-0 left-0 z-50">
