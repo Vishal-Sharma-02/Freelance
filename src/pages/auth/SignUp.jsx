@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../../utils/userSlice.jsx";
-// import useRazorpayPayment from "../../hooks/useRazorpayPayment";
 import { persistor } from "../../utils/appStore";
-// import { useSelector } from "react-redux";
+import { removeUser } from "../../utils/userSlice";
 import api from "../../utils/axiosInstance";
 import { startPremiumPayment } from "../../services/paymentService";
 
@@ -13,7 +12,6 @@ import { startPremiumPayment } from "../../services/paymentService";
 const SignUp = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // const startPayment = useRazorpayPayment();
 
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
@@ -50,6 +48,17 @@ const [form, setForm] = useState({
     confirmPassword: "",
   });
 
+    useEffect(() => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        navigate("/profile", { replace: true });
+      } else if (!token) {
+        // User in Redux but no token - clear user
+        dispatch(removeUser());
+        localStorage.removeItem("persist:root");
+      }
+    }, []);
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     setErrorMsg("");
@@ -84,7 +93,7 @@ if (!passwordRegex.test(form.password)) {
 
     const res = await api.post("/auth/register", form);
 
-    console.log("SignUp Response:", res.data); // Debug log
+    ("SignUp Response:", res.data); // Debug log
 
     // Handle response - data can be in res.data.data (with sendSuccess) or res.data (without)
     const userData = res.data.data?.user || res.data.user;

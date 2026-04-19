@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch,useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { addUser } from "../../utils/userSlice.jsx";
+import { addUser, removeUser } from "../../utils/userSlice.jsx";
 import { persistor } from "../../utils/appStore";
 import api from "../../utils/axiosInstance";
 
@@ -18,13 +18,17 @@ const LogIn = () => {
 
   const togglePassword = () => setShowPass(!showPass);
 
-  // Check if already logged in
+  // Check if already logged in (and token exists)
   useEffect(() => {
-    if (user?.emailId) {
-      console.log("User already logged in, redirecting to profile");
+    const token = localStorage.getItem("token");
+    if (token) {
       navigate("/profile", { replace: true });
+    } else if (!token) {
+      // User in Redux but no token - clear user
+      dispatch(removeUser());
+      localStorage.removeItem("persist:root");
     }
-  }, [user?.emailId, navigate]);
+  }, []);
 
   const handleClick = async (e) => {
     e.preventDefault();
@@ -42,37 +46,30 @@ const LogIn = () => {
         password,
       });
 
-      console.log("✅ Login Response:", res.data);
-
       // Handle response - data can be in res.data.data (with sendSuccess) or res.data (without)
-      const userData = res.data.data?.user || res.data.user;
-      const token = res.data.data?.token || res.data.token;
-
-      console.log("📦 Extracted Data:", { userData, token });
+      const userData = res.data.data?.user;
+      const token = res.data.data?.token;
 
       // Validate response has user data
-      if (!userData || !userData.emailId) {
+      if (!userData) {
         setErrorMsg("Invalid login response from server");
-        console.error("❌ Missing user data:", { userData, token });
+        console.error(" Missing user data:", { userData, token });
         return;
       }
 
       // Save token to localStorage
       if (token) {
         localStorage.setItem("token", token);
-        console.log("💾 Token saved to localStorage");
       }
-
-      // Dispatch user to Redux - this will trigger the useEffect above
-      console.log("🚀 Dispatching user to Redux");
       dispatch(addUser(userData));
       
       // Flush persistor to save to localStorage
       await persistor.flush();
-      console.log("✅ Persistor flushed");
+
+       navigate("/profile", { replace: true });
       
     } catch (err) {
-      console.error("❌ Login Error:", err);
+      console.error("Login Error:", err);
       const message =
         err.response?.data?.message || "Invalid credentials. Please try again.";
       setErrorMsg(message);
@@ -166,7 +163,6 @@ const LogIn = () => {
     Sign Up
   </Link>
 </p>
-
 
       </div>
     </div>

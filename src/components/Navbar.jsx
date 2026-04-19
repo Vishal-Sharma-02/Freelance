@@ -5,13 +5,13 @@ import { useSelector } from "react-redux";
 const Navbar = ({ type }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
  
-   // ⭐ CHECK LOGIN FROM REDUX STORE (PERSISTED)
+   //  CHECK LOGIN FROM REDUX STORE (PERSISTED)
   const user = useSelector((state) => state.user.data);
   const isLoggedIn = Boolean(user?.emailId);    
 
   return (
     <div className="w-full fixed top-0 left-0 z-50">
-      {/* ⭐ LANDING NAVBAR */}
+      {/*  LANDING NAVBAR */}
       {type === "false" && (
         <div className="backdrop-blur-xl bg-[#0D1125]/80 border-b border-white/10 shadow-lg">
           <div className="max-w-7xl mx-auto  py-2 flex justify-between items-center">
@@ -43,7 +43,7 @@ const Navbar = ({ type }) => {
             </button>
           </div>
 
-          {/* ⭐ MOBILE MENU */}
+          {/*  MOBILE MENU */}
           {mobileOpen && (
             <div className="md:hidden bg-[#0D1125]/95 text-white px-6 py-6 space-y-6 shadow-lg">
               <nav className="flex flex-col space-y-4 text-lg font-medium">
@@ -107,7 +107,7 @@ const Navbar = ({ type }) => {
         </div>
       )}
 
-      {/* ⭐ HOME NAVBAR */}
+      {/*  HOME NAVBAR */}
       {type === "true" && (
         <div className="backdrop-blur-xl bg-[#0B1320]/80 border-b border-white/10 shadow-lg">
           <div className="max-w-7xl mx-auto pr-4 md:pr-0 py-2 flex justify-between items-center">
@@ -168,7 +168,7 @@ const Navbar = ({ type }) => {
             </button>
           </div>
 
-          {/* ⭐ MOBILE MENU */}
+          {/*  MOBILE MENU */}
           {mobileOpen && (
             <div className="md:hidden bg-[#0B1320]/95 text-white px-6 py-6 space-y-6 shadow-lg">
               <nav className="flex flex-col space-y-4 text-lg font-medium">

@@ -16,7 +16,7 @@ const ForgotPassword = () => {
       await axios.post(`${BASE_URL}/auth/forgot-password`, { emailId: email });
       
       alert("OTP sent to your email");
-      navigate(`/verify-otp?email=${email}`);
+      navigate(`/verify-otp?emailId=${email}`);
 
     } catch (err) {
       alert(err.response?.data?.message || "Something went wrong");

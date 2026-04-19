@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import api from "../utils/axiosInstance";
 import { 
@@ -34,10 +34,17 @@ const AdminPanel = () => {
   
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { data: user, loading: userLoading } = useSelector((state) => state.user);
 
   useEffect(() => {
     const validateAdmin = async () => {
       try {
+        // If user is already loaded and is admin, skip API call
+        if (user && user.role === "admin") {
+          setAdminLoading(false);
+          return;
+        }
+
         const res = await api.get("/user/profile");
         const backendUser = res?.data?.data?.user || res?.data?.data;
         dispatch(addUser(backendUser));
@@ -53,8 +60,11 @@ const AdminPanel = () => {
       }
     };
 
-    validateAdmin();
-  }, [dispatch, navigate]);
+    // Only validate if not already loading user data
+    if (!userLoading) {
+      validateAdmin();
+    }
+  }, [user, userLoading, dispatch, navigate]);
 
   const loadUsers = useCallback(async () => {
     try {

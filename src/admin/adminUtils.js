@@ -31,7 +31,7 @@ export const fetchCourses = async (page = 1, limit = 10, search = "") => {
         search,
       },
     });
-    console.log("Fetched courses:", res?.data?.data);
+    ("Fetched courses:", res?.data?.data);
     return {
       courses: res?.data?.data || [],
       totalPages: res?.data?.data?.totalPages || 1,
@@ -46,7 +46,7 @@ export const fetchCourses = async (page = 1, limit = 10, search = "") => {
 
 // Update user's subscription or other fields (admin)
 export const updateUser = async (userId, data) => {
-  console.log("Updating user:", userId, data.isSubscribed);
+  ("Updating user:", userId, data.isSubscribed);
   try {
     const res = await api.patch(`/user/${userId}`, { isSubscribed: data.isSubscribed });
     return res.data;

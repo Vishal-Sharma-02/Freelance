@@ -8,19 +8,19 @@ const VerifyOtp = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const email = new URLSearchParams(location.search).get("email");
+  const emailId = new URLSearchParams(location.search).get("emailId");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const res = await axios.post(`${BASE_URL}/auth/verify-otp`, {
-        emailId: email,
+        emailId,
         otp,
       });
 
       alert("OTP Verified Successfully");
-      navigate(`/reset-password?email=${email}`);
+      navigate(`/reset-password?emailId=${emailId}`);
 
     } catch (err) {
       alert(err.response?.data?.message || "Invalid OTP");

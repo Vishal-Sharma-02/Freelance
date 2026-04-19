@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { addUser, removeUser, setLoading } from "../utils/userSlice";
 import { persistor } from "../utils/appStore";
 import api from "../utils/axiosInstance";
+import { clearAuth, getToken } from "../utils/authUtils";
 import { startPremiumPayment } from "../services/paymentService";
 
 const Profile = () => {
@@ -13,25 +14,38 @@ const Profile = () => {
   const { data: user, loading } = useSelector((state) => state.user);
 
   useEffect(() => {
+    // Validate token exists before fetching profile
+    const token = getToken();
+    if (!token) {
+      dispatch(removeUser());
+      navigate("/login", { replace: true });
+      return;
+    }
+
     const fetchProfile = async () => {
       try {
         dispatch(setLoading(true));
 
         const res = await api.get("/user/profile");
-        const fetchedUser = res?.data?.data?.user || res?.data?.data;
 
-        dispatch(addUser(fetchedUser));
+        dispatch(addUser(res?.data?.data));
       } catch (err) {
         console.error(err);
         dispatch(removeUser());
-        navigate("/login");
+
+        if (!err.response || err.response.status !== 401) {
+          navigate(
+            "/error?message=Failed%20to%20load%20profile.&details=Please%20try%20again%20after%20clearing%20browser%20cache%20or%20site%20data.",
+            { replace: true }
+          );
+        }
       } finally {
         dispatch(setLoading(false));
       }
     };
 
     fetchProfile();
-  }, [dispatch, navigate]);
+  }, []); 
 
   const handleLogout = async () => {
     try {
@@ -39,14 +53,14 @@ const Profile = () => {
     } catch (err) {
       console.error("Logout API failed:", err);
     } finally {
-      localStorage.removeItem("token");
+      clearAuth();
       dispatch(removeUser());
       await persistor.purge();
       navigate("/login", { replace: true });
     }
   };
 
-  // ⏳ Loading
+  // Loading
   if (loading) {
     return (
       <div className="min-h-screen flex justify-center items-center text-xl">
@@ -93,10 +107,10 @@ const Profile = () => {
 
           <section className="grid gap-6 lg:grid-cols-[1.45fr_0.55fr]">
             <div className="rounded-3xl bg-linear-to-br from-purple-600 to-indigo-600 p-6 text-white shadow-xl order-1 lg:order-2">
-              <div className="space-y-6">
+              <div className="space-y-10">
                 <div>
                   <h2 className="text-lg font-semibold uppercase tracking-[0.24em] text-purple-200">Quick actions</h2>
-                  <p className="mt-3 text-sm text-purple-100">Quick links for courses and subscription.</p>
+                 
                 </div>
 
                 {(user?.isSubscribed ?? user?.subscribed) ? (
@@ -145,7 +159,7 @@ const Profile = () => {
                 <p className="mt-2 text-sm text-slate-500">Manage your contact info and subscription details.</p>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
-                <InfoCard label="Email" value={user.emailId} />
+                <InfoCard label="Email" value={user.email || user.emailId || "N/A"} />
                 <InfoCard label="Mobile" value={user.mobile} />
                 <InfoCard label="State" value={user.state || "Not set"} />
                 <InfoCard

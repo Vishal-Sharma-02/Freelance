@@ -1,20 +1,15 @@
-import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children }) => {
-  const { data: user, loading } = useSelector((state) => state.user);
+  // Check if token exists in localStorage
+  const token = localStorage.getItem("token");
 
-  // ⏳ Still verifying session while no user exists yet
-  if (loading && !user) {
-    return <div>Loading...</div>; // or spinner
-  }
-
-  // ❌ Not logged in
-  if (!user || !user.emailId) {
+  // Not logged in - redirect to login
+  if (!token) {
     return <Navigate to="/login" replace />;
   }
 
-  // ✅ Logged in
+  // Logged in - render the protected com ponent
   return children;
 };
 
