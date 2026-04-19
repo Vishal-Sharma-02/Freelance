@@ -1,13 +1,89 @@
-import React from "react";
+import {useState} from "react";
 import { Link } from "react-router-dom";
 import AboutUs from "./AboutUs";
 import FAQs from "./FAQs";
 
 const Home = () => {
+
+  const [bannerVisible, setBannerVisible] = useState(true);
+
   return (
-    <div className="md:-mt-20">
-      {/* MAIN WRAPPER */}
-      <div className="min-h-screen w-full bg-gradient-to-b from-white via-[#f8f6ff] to-[#eef2ff] overflow-x-hidden">
+    <div>
+      {/* TECHNICAL MAINTENANCE INFO BANNER */}
+      {bannerVisible && (
+        <div className="relative z-50 w-full bg-linear-to-r from-blue-50 via-purple-50 to-blue-50 border-b-2 border-blue-200 py-6 px-4 sm:px-6 lg:px-10">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-start gap-4">
+              <div className="shrink-0 mt-0.5">
+                <div className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-blue-600">
+                  <svg
+                    className="h-5 w-5 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-sm font-semibold text-blue-900">
+                  Recent Technical Updates
+                </h3>
+                <p className="mt-2 text-sm text-blue-800">
+                  We've made some technical improvements to our platform. If you encounter any errors or issues, 
+                  please try <strong>resetting your site data</strong> (clear browser cache) or <strong>logging in again</strong>. 
+                  This will ensure you have the latest version of the website.
+                </p>
+                <div className="mt-3 flex flex-wrap gap-3">
+                  <button
+                    onClick={() => {
+                      localStorage.clear();
+                      window.location.reload();
+                    }}
+                    className="inline-flex items-center px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition"
+                  >
+                    Clear Site Data
+                  </button>
+                  <a
+                    href="/login"
+                    className="inline-flex items-center px-4 py-2 rounded-lg bg-white border border-blue-200 text-blue-700 text-sm font-medium hover:bg-blue-50 transition"
+                  >
+                    Go to Login
+                  </a>
+                </div>
+              </div>
+              <button
+                onClick={() => setBannerVisible(false)}
+                className="shrink-0 text-blue-600 hover:text-blue-800 transition mt-0.5"
+                aria-label="Close banner"
+              >
+                <svg
+                  className="h-5 w-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="md:-mt-20">
+      <div className="min-h-screen w-full bg-linear-to-b from-white via-[#f8f6ff] to-[#eef2ff] overflow-x-hidden">
         {/* HERO SECTION */}
         <section className="relative w-full min-h-screen flex items-center pb-5">
           {/* Background glow */}
@@ -34,7 +110,7 @@ const Home = () => {
               {/* CTA BUTTON */}
               <Link
                 to={"/course"}
-                className="px-8 py-3 rounded-full bg-gradient-to-r from-yellow-500 to-blue-700 text-white shadow-lg text-lg font-medium inline-flex items-center gap-2 hover:opacity-90 transition"
+                className="px-8 py-3 rounded-full bg-linear-to-r from-yellow-500 to-blue-700 text-white shadow-lg text-lg font-medium inline-flex items-center gap-2 hover:opacity-90 transition"
               >
                 Enroll Now →
               </Link>
@@ -45,7 +121,7 @@ const Home = () => {
               <div
                 className="
                   relative
-                  w-72 h-96 md:w-[22rem] md:h-[30rem]
+                  w-72 h-96 md:w-88 md:h-120
                   rounded-3xl
                   backdrop-blur-xl 
                   bg-white/40
@@ -70,6 +146,8 @@ const Home = () => {
             </div>
           </div>
         </section>
+      </div>
+
       </div>
 
       {/* ABOUT SECTION */}

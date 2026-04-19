@@ -23,7 +23,7 @@ const ContactUs = () => {
     setResponseMsg("");
 
     try {
-      const res = await fetch(`${BASE_URL}/contact/send`, {
+      const res = await fetch(`${BASE_URL}/send`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -36,11 +36,11 @@ const ContactUs = () => {
 
       const data = await res.json();
 
-      if (res.ok) {
-        setResponseMsg("Your message has been sent successfully!");
+      if (data.status === "success") {
+        setResponseMsg(data.message || "Your message has been sent successfully!");
         setFormData({ name: "", email: "", website: "", comment: "" });
       } else {
-        setResponseMsg(data.error || "Failed to send message.");
+        setResponseMsg(data.message || "Failed to send message.");
       }
     } catch (err) {
       console.log(err);
@@ -51,7 +51,7 @@ const ContactUs = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-br from-purple-100 to-purple-50 pt-10 pb-20">
+    <div className="w-full min-h-screen bg-linear-to-br from-purple-100 to-purple-50 pt-10 pb-20">
       {/* Top Heading */}
       <div className="max-w-7xl mx-auto px-6">
         <h1 className="text-4xl font-bold text-gray-900">Contact With Us</h1>
@@ -62,7 +62,7 @@ const ContactUs = () => {
         {/* LEFT SIDE - CONTACT CARDS */}
         <div className="space-y-8">
           {/* Phone Card */}
-          <div className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-white p-7 rounded-xl shadow-lg flex items-center gap-6">
+          <div className="w-full bg-linear-to-r from-yellow-400 to-yellow-600 text-white p-7 rounded-xl shadow-lg flex items-center gap-6">
             <div className="w-16 h-16 bg-white rounded-full flex justify-center items-center text-3xl text-yellow-600 shadow-md">
               📞
             </div>
@@ -138,7 +138,7 @@ const ContactUs = () => {
             <button
               type="submit"
               disabled={loading}
-              className="bg-gradient-to-r from-yellow-500 to-yellow-700 text-white px-10 py-3 rounded-full shadow-lg hover:opacity-90 transition-all text-lg font-semibold disabled:opacity-50"
+              className="bg-linear-to-r from-yellow-500 to-yellow-700 text-white px-10 py-3 rounded-full shadow-lg hover:opacity-90 transition-all text-lg font-semibold disabled:opacity-50"
             >
               {loading ? "Sending..." : "Submit Now →"}
             </button>

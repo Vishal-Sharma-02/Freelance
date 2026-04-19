@@ -9,7 +9,7 @@ const MyCourses = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user.data);
 
   useEffect(() => {
   const fetchCourses = async () => {
@@ -21,7 +21,7 @@ const MyCourses = () => {
 
     try {
       const res = await api.get(`/my-courses/${user._id}`);
-      setCourses(res.data);
+      setCourses(res.data.data);
     } catch (err) {
       console.error(err);
       setError("Failed to load purchased courses");
@@ -35,7 +35,7 @@ const MyCourses = () => {
 
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-white to-gray-100 px-6 pt-10 text-gray-900">
+    <div className="min-h-screen w-full bg-linear-to-b from-white to-gray-100 px-6 pt-10 text-gray-900">
 
       {/* HEADER */}
       <div className="max-w-7xl mx-auto text-center mb-16">

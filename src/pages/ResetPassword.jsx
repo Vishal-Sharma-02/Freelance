@@ -10,7 +10,7 @@ const ResetPassword = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const email = new URLSearchParams(location.search).get("email");
+  const emailId = new URLSearchParams(location.search).get("emailId");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,7 +22,7 @@ const ResetPassword = () => {
 
     try {
       await axios.post(`${BASE_URL}/auth/reset-password`, {
-        emailId: email,
+        emailId,
         newPassword: pass
       });
 

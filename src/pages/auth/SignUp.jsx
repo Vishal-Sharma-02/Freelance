@@ -2,11 +2,9 @@ import React, { useState , useEffect} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../../utils/userSlice.jsx";
-// import useRazorpayPayment from "../../hooks/useRazorpayPayment";
 import { persistor } from "../../utils/appStore";
-// import { useSelector } from "react-redux";
+import { removeUser } from "../../utils/userSlice";
 import api from "../../utils/axiosInstance";
-import { loadRazorpay } from "../../utils/loadRazorpay";
 import { startPremiumPayment } from "../../services/paymentService";
 
 
@@ -14,14 +12,13 @@ import { startPremiumPayment } from "../../services/paymentService";
 const SignUp = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // const startPayment = useRazorpayPayment();
 
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const togglePassword = () => setShowPass(!showPass);
   const [registeredUser, setRegisteredUser] = useState(null);
-  const [razorpayReady, setRazorpayReady] = useState(false);
+
   const [showSignupPopup, setShowSignupPopup] = useState(false);
 
 
@@ -36,23 +33,12 @@ const SignUp = () => {
 
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [acceptPrivacy, setAcceptPrivacy] = useState(false);
-const [orderData, setOrderData] = useState(null);
+
 const passwordRegex =
   // /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
   /^.{4,}$/;
 
-useEffect(() => {
-  if (showSignupPopup) {
-    const load = async () => {
-      const loaded = await loadRazorpay();
-      setRazorpayReady(loaded);
-    };
-    load();
-  }
-}, [showSignupPopup]);
-
-
-  const [form, setForm] = useState({
+const [form, setForm] = useState({
     fullName: "",
     emailId: "",
     confirmEmail: "",
@@ -61,6 +47,17 @@ useEffect(() => {
     password: "",
     confirmPassword: "",
   });
+
+    useEffect(() => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        navigate("/profile", { replace: true });
+      } else if (!token) {
+        // User in Redux but no token - clear user
+        dispatch(removeUser());
+        localStorage.removeItem("persist:root");
+      }
+    }, []);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -96,20 +93,39 @@ if (!passwordRegex.test(form.password)) {
 
     const res = await api.post("/auth/register", form);
 
-    if (res.data.token) {
-      localStorage.setItem("token", res.data.token);
+    ("SignUp Response:", res.data); // Debug log
+
+    // Handle response - data can be in res.data.data (with sendSuccess) or res.data (without)
+    const userData = res.data.data?.user || res.data.user;
+    const token = res.data.data?.token || res.data.token;
+
+    // Validate response has user data
+    if (!userData || !userData.emailId) {
+      setErrorMsg("Invalid registration response from server");
+      console.error("Missing user data:", { userData, token });
+      return;
     }
 
-    dispatch(addUser(res.data.user));
+    if (token) {
+      localStorage.setItem("token", token);
+    }
+
+    // Dispatch user to Redux
+    dispatch(addUser(userData));
+    
+    // Store registered user for payment
+    setRegisteredUser(userData);
+
+    // Wait for state to be persisted
     await persistor.flush();
-    setRegisteredUser(res.data.user);
 
     // 🔐 create order AFTER signup
-    const orderRes = await api.post("/payment/create");
+    // Create payment order
+    await api.post("/payment/create");
 
-    setOrderData(orderRes.data);
     setShowSignupPopup(true);
   } catch (err) {
+    console.error("SignUp Error:", err);
     const message =
       err.response?.data?.message || "Something failed.";
     setErrorMsg(message);
@@ -120,13 +136,13 @@ if (!passwordRegex.test(form.password)) {
 
 
   return (
-  <div className="min-h-screen bg-gradient-to-br from-purple-200 via-purple-100 to-white flex justify-center items-start py-16 px-4">
+  <div className="min-h-screen bg-linear-to-br from-purple-200 via-purple-100 to-white flex justify-center items-start py-16 px-4">
 
     {/* FORM WRAPPER */}
     <div className="w-full max-w-3xl bg-white/70 backdrop-blur-xl border border-purple-200 shadow-xl rounded-2xl p-10">
 
       {/* HEADING */}
-      <h1 className="text-4xl font-extrabold text-center bg-gradient-to-r from-purple-600 to-purple-900 bg-clip-text text-transparent">
+      <h1 className="text-4xl font-extrabold text-center bg-linear-to-r from-purple-600 to-purple-900 bg-clip-text text-transparent">
         Create Your Account
       </h1>
 
@@ -269,7 +285,7 @@ if (!passwordRegex.test(form.password)) {
         <button
     type="submit"
     disabled={loading}
-    className="w-full bg-gradient-to-r from-purple-600 to-purple-800 text-white py-3 rounded-full font-bold text-lg shadow-lg hover:opacity-90 transition disabled:bg-gray-400"
+    className="w-full bg-linear-to-r from-purple-600 to-purple-800 text-white py-3 rounded-full font-bold text-lg shadow-lg hover:opacity-90 transition disabled:bg-gray-400"
   >
     {loading ? "Please wait..." : "Sign Up →"}
   </button>
@@ -298,7 +314,7 @@ if (!passwordRegex.test(form.password)) {
       onAlreadySubscribed: () => navigate("/course"),
     })
   }
-  className="w-full bg-blue-600 text-white py-3 rounded-full font-bold rounded-full"
+  className="w-full bg-blue-600 text-white py-3 rounded-full font-bold"
 >
   Continue to Payment →
 </button>

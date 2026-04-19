@@ -16,7 +16,7 @@ export const startPremiumPayment = async ({
     // 1️⃣ VERIFY SUBSCRIPTION FIRST (IMPORTANT)
     const verifyRes = await api.get("/premium/verify");
 
-    if (verifyRes.data.isSubscribed) {
+    if (verifyRes.data.data.isSubscribed) {
       // Already paid → skip payment
       onAlreadySubscribed?.();
       return;
@@ -33,10 +33,10 @@ export const startPremiumPayment = async ({
     const res = await api.post("/payment/create");
 
     const options = {
-      key: res.data.keyId,
-      amount: res.data.amount,
-      currency: res.data.currency,
-      order_id: res.data.orderId,
+      key: res.data.data.keyId,
+      amount: res.data.data.amount,
+      currency: res.data.data.currency,
+      order_id: res.data.data.orderId,
 
       name: "Anaylixhub",
       description: "Premium Subscription",

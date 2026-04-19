@@ -14,6 +14,7 @@ import LandingPage from './pages/LandingPage';
 import Courses from './pages/Courses';
 import AboutUs from './pages/AboutUs';
 import Profile from './pages/Profile';
+import ErrorPage from './pages/ErrorPage.jsx';
 import PrivacyPolicy from './pages/legal/PrivacyPolicy.jsx';
 import RefundPolicy from './pages/legal/RefundPolicy.jsx';
 import TermsCondition from './pages/legal/TermsCondition.jsx';
@@ -23,6 +24,8 @@ import AddCourse from './admin/AddCourse.jsx';
 import CourseDetails from './pages/CourseDetail.jsx';
 import Learning from './pages/Learning.jsx';
 import EditCourse from './admin/EditCourse.jsx';
+// import AdminPanel from './admin/Users.jsx';
+import AdminPanel from "./admin/AdminPanel.jsx";
 import PaymentStart from './pages/PaymentStart.jsx';
 import PaymentStatus from './pages/PaymentStatus.jsx';
 import ForgotPassword from './pages/ForgotPassword.jsx';
@@ -31,11 +34,20 @@ import ResetPassword from './pages/ResetPassword.jsx';
 import ScrollToTop from "./components/ScrollToTop"; 
 import ProtectedRoute from './hooks/ProtectedRoute.jsx';
 
+const LoadingScreen = () => (
+  <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-purple-50 via-white to-slate-100">
+    <div className="text-center">
+      <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+      <p className="mt-4 text-gray-600">Loading...</p>
+    </div>
+  </div>
+);
+
 export default function App() {
   return (
       
       <Provider store={appStore}>
-        <PersistGate loading={null} persistor={persistor}>
+        <PersistGate loading={<LoadingScreen />} persistor={persistor}>
       <BrowserRouter>
       <ScrollToTop />
         <Routes>
@@ -51,6 +63,8 @@ export default function App() {
             <Route path='/learn/:id' element={<ProtectedRoute><Learning /></ProtectedRoute>} />
             <Route path='/about' element={<AboutUs/>} />
             <Route path='/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path='/error' element={<ErrorPage />} />
+            <Route path="/admin-panel" element={<ProtectedRoute><AdminPanel /></ProtectedRoute>} />
             <Route path="/addcourse" element={<ProtectedRoute><AddCourse /></ProtectedRoute>} />
             <Route path="/editcourse/:id" element={<ProtectedRoute><EditCourse /></ProtectedRoute>} />
             <Route path="/payment-start" element={<ProtectedRoute><PaymentStart /></ProtectedRoute>} />

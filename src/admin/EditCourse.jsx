@@ -18,7 +18,7 @@ const EditCourse = () => {
         
         const res = await api.get(`/course/${id}`);
         
-        setCourse(res.data);
+        setCourse(res.data.data);
         setLoading(false);
       } catch (err) {
         console.error(err);
@@ -92,9 +92,9 @@ const EditCourse = () => {
     e.preventDefault();
 
     try {
-     await api.put(`/course/update/${course._id}`, course);
+      const res = await api.patch(`/course/${course._id}`, course);
 
-      alert("Course updated successfully!");
+      alert(res.data.message || "Course updated successfully!");
 
       navigate(`/course/${course._id}`);
     } catch (err) {

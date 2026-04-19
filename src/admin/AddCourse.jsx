@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import api from "../utils/axiosInstance";
 
-const AddCourse = () => {
+const AddCourse = ({ onSuccess }) => {
   const [course, setCourse] = useState({
     title: "",
     shortDescription: "",
@@ -55,9 +55,9 @@ const AddCourse = () => {
   e.preventDefault();
 
   try {
-    await api.post("/course/create", course);
+    const res = await api.post("/course/create", course);
 
-    alert("Course Created Successfully!");
+    alert(res.data.message || "Course Created Successfully!");
 
     setCourse({
       title: "",
@@ -71,6 +71,11 @@ const AddCourse = () => {
       duration: "",
       modules: []
     });
+
+    // Call onSuccess callback if provided
+    if (onSuccess) {
+      onSuccess();
+    }
   } catch (err) {
     alert("Error Creating Course");
     console.error(err);

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch,useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { addUser } from "../../utils/userSlice.jsx";
+import { addUser, removeUser } from "../../utils/userSlice.jsx";
 import { persistor } from "../../utils/appStore";
 import api from "../../utils/axiosInstance";
 
 const LogIn = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user.data);
 
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
@@ -18,51 +18,68 @@ const LogIn = () => {
 
   const togglePassword = () => setShowPass(!showPass);
 
+  // Check if already logged in (and token exists)
   useEffect(() => {
-    if (user?.emailId) {
-      navigate("/profile");  // Already logged in → redirect
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/profile", { replace: true });
+    } else if (!token) {
+      // User in Redux but no token - clear user
+      dispatch(removeUser());
+      localStorage.removeItem("persist:root");
     }
-  }, [user]);
+  }, []);
 
   const handleClick = async (e) => {
-  e.preventDefault();
-  setErrorMsg("");
+    e.preventDefault();
+    setErrorMsg("");
 
-  if (!emailId || !password) {
-    setErrorMsg("Please enter both email and password");
-    return;
-  }
+    if (!emailId || !password) {
+      setErrorMsg("Please enter both email and password");
+      return;
+    }
 
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
+      const res = await api.post("/auth/login", {
+        emailId,
+        password,
+      });
 
-   const res = await api.post("/auth/login", {
-  emailId,
-  password,
-});
+      // Handle response - data can be in res.data.data (with sendSuccess) or res.data (without)
+      const userData = res.data.data?.user;
+      const token = res.data.data?.token;
 
-// Save token
-if (res.data.token) {
-  localStorage.setItem("token", res.data.token);
-}
+      // Validate response has user data
+      if (!userData) {
+        setErrorMsg("Invalid login response from server");
+        console.error(" Missing user data:", { userData, token });
+        return;
+      }
 
-// 🚀 USE USER FROM LOGIN RESPONSE
-dispatch(addUser(res.data.user));
-await persistor.flush();
+      // Save token to localStorage
+      if (token) {
+        localStorage.setItem("token", token);
+      }
+      dispatch(addUser(userData));
+      
+      // Flush persistor to save to localStorage
+      await persistor.flush();
 
-// Redirect immediately
-navigate("/profile");
-  } catch (err) {
-    const message =
-      err.response?.data?.message || "Invalid credentials. Please try again.";
-    setErrorMsg(message);
-  } finally {
-    setLoading(false);
-  }
-};
+       navigate("/profile", { replace: true });
+      
+    } catch (err) {
+      console.error("Login Error:", err);
+      const message =
+        err.response?.data?.message || "Invalid credentials. Please try again.";
+      setErrorMsg(message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-200 via-purple-100 to-purple-50 flex items-center justify-center px-4 py-10">
+    <div className="min-h-screen bg-linear-to-br from-purple-200 via-purple-100 to-purple-50 flex items-center justify-center px-4 py-10">
 
       {/* Main Card */}
       <div className="w-full max-w-md bg-white/70 backdrop-blur-xl shadow-2xl rounded-2xl p-8 border border-white">
@@ -146,7 +163,6 @@ navigate("/profile");
     Sign Up
   </Link>
 </p>
-
 
       </div>
     </div>
