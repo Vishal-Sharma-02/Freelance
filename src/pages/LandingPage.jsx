@@ -6,9 +6,9 @@ import { WHATSAPP_NUMBER, WHATSAPP_MESSAGE } from "../utils/constants";
 
 const LandingPage = () => {
   const masteryItems = [
-    "Digital Product Course",
+    // "Digital Product Course",
     //"Graphic Designing",
-    "Script Writing",
+    // "Script Writing",
     "Digital Product Business Guide ",
     // "Social Media Management",
     //"Turn Your Free Time into Income",
@@ -35,8 +35,7 @@ const LandingPage = () => {
             {/* LEFT SECTION */}
             <div className="order-2 lg:order-1 space-y-6 text-center lg:text-left">
               <h1 className="text-4xl md:text-6xl font-extrabold leading-tight text-white">
-                Anaylix Product & <br />
-                Monetisation Framework
+                Digital product business Blueprint
               </h1>
 
               <p className="text-gray-300 text-lg max-w-md mx-auto lg:mx-0">
@@ -110,7 +109,7 @@ const LandingPage = () => {
         <div className="w-full bg-gradient-to-br from-[#0d0a00] to-black py-20 mt-10 px-6">
           {/* Heading */}
           <h2 className="text-center text-4xl md:text-5xl font-extrabold text-yellow-300 drop-shadow-lg">
-            THE MASTERY PACK
+            The Complete Digital Product Business Blueprint
           </h2>
 
           <p className="text-center text-gray-300 text-lg max-w-2xl mx-auto mt-3">

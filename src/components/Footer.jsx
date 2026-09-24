@@ -1,11 +1,27 @@
 import React from "react";
-import { Mail, Phone } from "lucide-react";
+import { ExternalLink, Mail, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
+
+const socialLinks = [
+  {
+    name: "Instagram",
+    href: " https://www.instagram.com/anaylixhub?stkn=MWtqcjM2c2d0NDNtbg=",
+  },
+  {
+    name: "WhatsApp",
+    href: " https://whatsapp.com/channel/0029VbDi2oTId7nI4igCJs1q",
+  },
+  {
+    name: "YouTube",
+    href: " https://youtube.com/@anaylixhub?si=ImBI5c1lkLagXlNs",
+  },
+  { name: "Telegram", href: " https://t.me/AnayaPinterestwork" },
+];
 
 const Footer = ()=>{
   return (
     <footer className="bg-[#0B0C2A] text-white pt-16 pb-6">
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-5 gap-12">
         {/* Logo & About */}
         <div>
           <h2 className="text-2xl font-bold mb-4">AnaylixHub</h2>
@@ -46,9 +62,9 @@ const Footer = ()=>{
           <h3 className="text-xl font-semibold mb-3">Our Courses</h3>
           <div className="w-10 h-1 bg-yellow-500 mb-4" />
           <ul className="space-y-2 text-gray-300">
-            <li>» Digital Product Course</li>
-            <li>» Script Writing</li>
-            <li>» Digital Product Business Guide </li>
+            {/* <li>» Digital Product Course</li>
+            <li>» Script Writing</li> */}
+            <li>» Digital Product Business Guides </li>
           </ul>
         </div>
 
@@ -63,6 +79,28 @@ const Footer = ()=>{
           <p className="flex items-center gap-2 text-gray-300">
             <Mail size={18} /> support@anaylixhub.in
           </p>
+        </div>
+
+        {/* Social Media */}
+        <div>
+          <h3 className="text-xl font-semibold mb-3">Follow AnaylixHub</h3>
+          <div className="w-10 h-1 bg-yellow-500 mb-4" />
+          <ul className="space-y-2 text-gray-300">
+            {socialLinks.map((socialLink) => (
+              <li key={socialLink.name}>
+                <a
+                  href={socialLink.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-2 hover:text-yellow-400 transition-colors"
+                >
+                  <span aria-hidden="true">»</span>
+                  {socialLink.name}
+                  <ExternalLink size={14} aria-hidden="true" />
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
 
