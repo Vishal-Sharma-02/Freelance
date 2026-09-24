@@ -36,9 +36,11 @@ const Home = () => {
                   Recent Technical Updates
                 </h3>
                 <p className="mt-2 text-sm text-blue-800">
-                  We've made some technical improvements to our platform. If you encounter any errors or issues, 
-                  please try <strong>resetting your site data</strong> (clear browser cache) or <strong>logging in again</strong>. 
-                  This will ensure you have the latest version of the website.
+                  We've made some technical improvements to our platform. If you
+                  encounter any errors or issues, please try{" "}
+                  <strong>resetting your site data</strong> (clear browser
+                  cache) or <strong>logging in again</strong>. This will ensure
+                  you have the latest version of the website.
                 </p>
                 <div className="mt-3 flex flex-wrap gap-3">
                   <button
@@ -83,43 +85,42 @@ const Home = () => {
       )}
 
       <div className="md:-mt-20">
-      <div className="min-h-screen w-full bg-linear-to-b from-white via-[#f8f6ff] to-[#eef2ff] overflow-x-hidden">
-        {/* HERO SECTION */}
-        <section className="relative w-full min-h-screen flex items-center pb-5">
-          {/* Background glow */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,210,70,0.35),transparent_60%)]"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(60,90,255,0.25),transparent_70%)]"></div>
+        <div className="min-h-screen w-full bg-linear-to-b from-white via-[#f8f6ff] to-[#eef2ff] overflow-x-hidden">
+          {/* HERO SECTION */}
+          <section className="relative w-full min-h-screen flex items-center pb-5">
+            {/* Background glow */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,210,70,0.35),transparent_60%)]"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(60,90,255,0.25),transparent_70%)]"></div>
 
-          <div className="relative max-w-7xl mx-auto w-full px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            {/* LEFT TEXT */}
-            <div className="space-y-6">
-              <h1 className="text-4xl md:text-6xl font-extrabold leading-tight text-gray-900">
-                Never Stop{" "}
-                <span className="bg-yellow-500 text-white px-4 py-1 rounded-md shadow-md">
-                  Learning
-                </span>
-                <br />
-                Life Never Stop Teaching
-              </h1>
+            <div className="relative max-w-7xl mx-auto w-full px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+              {/* LEFT TEXT */}
+              <div className="space-y-6">
+                <h1 className="text-4xl md:text-6xl font-extrabold leading-tight text-gray-900">
+                  Turn Your{" "}
+                  <span className="bg-yellow-500 text-white px-4 py-1 rounded-md shadow-md">
+                    Knowledge
+                  </span>
+                  <br />
+                  Into Digital Income.
+                </h1>
 
-              <p className="text-gray-600 text-lg max-w-md">
-                Every teaching and learning journey is unique. Following along,
-                we’ll help guide your way.
-              </p>
+                <p className="text-gray-600 text-lg max-w-md">
+                  Learn. Create. Sell. Scale.
+                </p>
 
-              {/* CTA BUTTON */}
-              <Link
-                to={"/course"}
-                className="px-8 py-3 rounded-full bg-linear-to-r from-yellow-500 to-blue-700 text-white shadow-lg text-lg font-medium inline-flex items-center gap-2 hover:opacity-90 transition"
-              >
-                Enroll Now →
-              </Link>
-            </div>
+                {/* CTA BUTTON */}
+                <Link
+                  to={"/course"}
+                  className="px-8 py-3 rounded-full bg-linear-to-r from-yellow-500 to-blue-700 text-white shadow-lg text-lg font-medium inline-flex items-center gap-2 hover:opacity-90 transition"
+                >
+                  Enroll Now →
+                </Link>
+              </div>
 
-            {/* RIGHT: BOOK GLASS CARD */}
-            <div className="flex justify-center md:justify-end">
-              <div
-                className="
+              {/* RIGHT: BOOK GLASS CARD */}
+              <div className="flex justify-center md:justify-end">
+                <div
+                  className="
                   relative
                   w-72 h-96 md:w-88 md:h-120
                   rounded-3xl
@@ -132,22 +133,21 @@ const Home = () => {
                   hover:shadow-[0_12px_60px_rgba(0,0,0,0.25)]
                   transition-all duration-500
                 "
-              >
-                {/* Glow Behind Book */}
-                <div className="absolute inset-0 rounded-3xl bg-[radial-gradient(circle,rgba(255,180,0,0.4),transparent_60%)]"></div>
+                >
+                  {/* Glow Behind Book */}
+                  <div className="absolute inset-0 rounded-3xl bg-[radial-gradient(circle,rgba(255,180,0,0.4),transparent_60%)]"></div>
 
-                {/* Book Image */}
-                <img
-                  src="https://res.cloudinary.com/dhulhgd5y/image/upload/v1774889586/Homepage_photoes_kve0by.png"
-                  alt="Mastery Pack"
-                  className="relative w-[80%] object-contain drop-shadow-[0_0_25px_rgba(255,170,50,0.45)]"
-                />
+                  {/* Book Image */}
+                  <img
+                    src="https://res.cloudinary.com/dhulhgd5y/image/upload/v1789147945/IMG_7775_ginq2n.png"
+                    alt="Mastery Pack"
+                    className="relative w-[80%] object-contain drop-shadow-[0_0_25px_rgba(255,170,50,0.45)]"
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        </section>
-      </div>
-
+          </section>
+        </div>
       </div>
 
       {/* ABOUT SECTION */}

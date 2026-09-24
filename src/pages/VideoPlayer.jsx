@@ -4,38 +4,80 @@ import Hls from "hls.js";
 const VideoPlayer = () => {
   const videoRef = useRef(null);
   const [hasStarted, setHasStarted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const video = videoRef.current;
     const url =
-      "https://vz-abea7b3f-f97.b-cdn.net/76a509ac-80b6-426a-8235-bcba9607d138/playlist.m3u8";
+      "https://vz-abea7b3f-f97.b-cdn.net/5cadd260-423a-47f4-b054-0dd9917812d7/playlist.m3u8";
 
     video.muted = true;
     video.playsInline = true;
+    video.preload = "auto";
+
+    const playVideo = () => {
+      video.play().catch(() => {
+        setError("Click the play button to start the video.");
+      });
+    };
 
     if (video.canPlayType("application/vnd.apple.mpegurl")) {
       video.src = url;
-      video.play().catch(() => {});
+      video.addEventListener("loadedmetadata", playVideo);
+      video.addEventListener("canplay", () => setIsLoading(false), {
+        once: true,
+      });
+
+      return () => {
+        video.removeEventListener("loadedmetadata", playVideo);
+        video.removeAttribute("src");
+        video.load();
+      };
     } else if (Hls.isSupported()) {
-      const hls = new Hls();
-      hls.loadSource(url);
+      const hls = new Hls({
+        enableWorker: true,
+        lowLatencyMode: false,
+      });
+
       hls.attachMedia(video);
+      hls.on(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(url));
 
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        video.play().catch(() => {});
+        setIsLoading(false);
+        playVideo();
+      });
+
+      hls.on(Hls.Events.ERROR, (_, data) => {
+        if (!data.fatal) return;
+
+        if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+          hls.startLoad();
+        } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+          hls.recoverMediaError();
+        } else {
+          setIsLoading(false);
+          setError("The video could not be loaded. Please try again.");
+        }
       });
 
       return () => hls.destroy();
     }
+
+    setIsLoading(false);
+    setError("This browser does not support HLS video playback.");
   }, []);
 
   const handlePlayClick = () => {
     const video = videoRef.current;
-    video.currentTime = 0;
     video.muted = false;
     video.volume = 1;
-    video.play();
-    setHasStarted(true);
+    video.play()
+      .then(() => {
+        setHasStarted(true);
+        setError("");
+      })
+      .catch(() => setError("The video is still loading. Please try again."));
   };
 
   return (
@@ -55,9 +97,22 @@ const VideoPlayer = () => {
         autoPlay
         muted
         playsInline
+        preload="auto"
         controls={hasStarted}
         className="w-full h-full object-contain bg-black"
       />
+
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white">
+          Loading video...
+        </div>
+      )}
+
+      {error && !isLoading && (
+        <p className="absolute bottom-4 left-4 right-4 text-center text-sm text-white">
+          {error}
+        </p>
+      )}
 
       {/* PLAY BUTTON */}
       {!hasStarted && (
